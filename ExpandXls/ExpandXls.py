@@ -2,6 +2,8 @@ import sys
 import os
 import copy
 import pandas as pd
+import argparse
+
 
 argFname = 1
 argNumArgs = argFname+1 # first arg is our name, i.e. ExpandXls.py
@@ -29,13 +31,10 @@ def ExpandXls(xlsName):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != argNumArgs:
-        print("ERROR: expect filename.xls* as argument")
-        usage()
-        exit(-1)
-    if (-1 == sys.argv[argFname].find(".xls")) or (False == os.path.isfile(sys.argv[argFname])):
-        print("ERROR: %s is not valid filename.xls*" % sys.argv[argFname])
-        usage()
-        exit(-1)
+    my_parser = argparse.ArgumentParser(prog='ExpandXls',
+        description="stdout receives tab-separated-values form of data in *.xls or *.xlsx",
+        usage='%(prog)s spreadsheet',)
+    my_parser.add_argument('spreadsheet',type=str,help='path to spreadsheet.xls or spreadsheet.xlsx')
+    args = my_parser.parse_args()
 
-    ExpandXls(sys.argv[argFname])
+    ExpandXls(args.spreadsheet)
