@@ -1,11 +1,8 @@
 import sys
 import os
-import copy
+# import copy
 import pandas as pd
 import argparse
-
-def usage():
-    print("Usage: %s filename.xlsx" % (sys.argv[0]))
 
 def ExpandXls(xlsName):
     # Import the excel file
