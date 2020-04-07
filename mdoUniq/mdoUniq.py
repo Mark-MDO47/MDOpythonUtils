@@ -11,9 +11,7 @@ import argparse
 def mdoUniq(fname, startStr, endStr):
    prevLine = ""
    fobj = open(fname, 'rt')
-   # print("DEBUG - open %s" % sys.argv[argFname])
    theLine = fobj.readline()
-   # print("DEBUG - first line |%s|" % theLine)
    while "" != theLine: # null string means EOF
       theLine = theLine.strip()
       # print("DEBUG - line.strip() |%s|" % theLine)
