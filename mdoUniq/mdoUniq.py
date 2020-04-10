@@ -8,32 +8,44 @@ import sys
 import io
 import argparse
 
-def mdoUniq(fname, startStr, endStr):
-   if '-' == fname:
-       fobj = sys.stdin
-   else:
-       fobj = open(fname, 'rt')
-   prevLine = ""
-   theLine = fobj.readline()
-   while "" != theLine: # null string means EOF
-      theLine = theLine.strip()
-      nStart = theLine.find(startStr)
-      nEnd = theLine.find(endStr)
-      # if could not find startStr and/or endStr, default to start or end of line
-      if (-1 == nStart):
-         nStart = 0
-      if (-1 == nEnd):
-         nEnd = len(theLine)
-      if prevLine != theLine[nStart:nEnd]:
-          # theLine differes from prevLine, print it
-         print("%s" % theLine)
-      prevLine = theLine[nStart:nEnd]
-      theLine = fobj.readline()
-   fobj.close()
+def mdoUniq(fname, startStr, endStr, ignoreCase):
+    if '-' == fname:
+        fobj = sys.stdin
+    else:
+        fobj = open(fname, 'rt')
+    if ignoreCase:
+        startStr = startStr.upper()
+        endStr = endStr.upper()
+    # print("startStr |%s| endStr |%s|" % (startStr,endStr))
+    prevLine = ""
+    theLine = fobj.readline()
+    while "" != theLine: # null string means EOF
+        compareLine = theLine = theLine.strip()
+        if ignoreCase:
+            compareLine = theLine.upper()
+        nStart = compareLine.find(startStr)
+        nEnd = compareLine.find(endStr)
+        # print("compareLine |%s| nStart=%d nEnd=%d" % (compareLine, nStart, nEnd))
+        if -1 == nStart:
+            # if startStr not found, then comparison starts at beginning of line
+            nStart = 0
+        if -1 == nEnd:
+            # if endStr not found, then comparison stops at end of line
+            nEnd = len(theLine)
+        if nEnd < nStart:
+            # if endStr is found before startStr then comparison uses entire line
+            nStart = 0
+            nEnd = len(theLine)
+        if prevLine != compareLine[nStart:nEnd]:
+            # theLine differs from prevLine, print it
+            print("%s" % theLine)
+        prevLine = compareLine[nStart:nEnd]
+        theLine = fobj.readline()
+    fobj.close()
 
 if __name__ == "__main__":
     my_parser = argparse.ArgumentParser(prog='mdoUniq',
-        formatter_class=argparse.RawDescriptionHelpFormatter,
+        formatter_class=argparse.RawTextHelpFormatter,
         description="simple uniq between startStr to endStr on each line",
         epilog="""Example: suppose mdo.txt has the following lines
 
@@ -57,9 +69,20 @@ $ grep DEBUG mdo.txt | python mdoUniq.py - DEBUG msec
 """,
         usage='%(prog)s fname startStr endStr',)
     my_parser.add_argument('fname',type=str,help='path to file to perform mdoUniq on; "-" for stdin')
-    my_parser.add_argument('startStr',type=str,help='string marking start of uniq comparison')
-    my_parser.add_argument('endStr',type=str,help='string marking end of uniq comparison')
+    my_parser.add_argument('startStr',type=str,help="""string marking start of uniq comparison
+    comparison starts at first character of first instance of startStr
+    if startStr not found, then comparison starts at beginning of line
+""")
+    my_parser.add_argument('endStr',type=str,help="""string marking end of uniq comparison
+    comparison stops before first character of first instance of endStr
+    if endStr not found, then comparison stops at end of line
+    if endStr is found before startStr then comparison uses entire line
+    """)
+    my_parser.add_argument('-i',
+                           '--ignore-case',
+                           action='store_true',
+                           help='ignore differences in case when comparing')
     args = my_parser.parse_args()
 
-    mdoUniq(args.fname, args.startStr, args.endStr)
+    mdoUniq(args.fname, args.startStr, args.endStr, args.ignore_case)
 
