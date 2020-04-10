@@ -21,7 +21,7 @@ def xlsx2txt(xlsName):
 
 if __name__ == "__main__":
     my_parser = argparse.ArgumentParser(prog='xlsx2txt',
-        formatter_class=argparse.RawDescriptionHelpFormatter,
+        formatter_class=argparse.RawTextHelpFormatter,
         description="stdout receives tab-separated-values form of data in *.xls or *.xlsx",
         epilog="""Example:
 python xlsx2txt.py old.xlsx > old.txt
