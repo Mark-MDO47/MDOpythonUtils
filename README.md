@@ -11,6 +11,7 @@ some short general purpose Python 3.x utilities
   - example: `python mdoUniq.py fname.txt startStr endStr`
   - example: `grep -n StateValue debug.txt | python mdoUniq.py - : "at msec"`
   - performs simple uniq between startStr to endStr on each line
+    - if fname is "-", lines to compare are from stdin (allows pipe construct)
     - if "-i" or "--ignore-case" then ignore differences in case when comparing
     - comparison starts at first character of first instance of startStr
     - comparison stops before first character of first instance of endStr
