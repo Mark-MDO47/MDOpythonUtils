@@ -7,10 +7,14 @@ some short general purpose Python 3.x utilities
   - writes tab-separated-variable version to stdout in form `tabname\tA1\tA2\t...`
   - gotchas: has no real error checking; will barf on UnicodeEncodeError and other errors
 
-- mdoUniq - 
+- mdoUniq - uniq for part of the line
   - example: `python mdoUniq.py fname.txt startStr endStr`
   - example: `grep -n StateValue debug.txt | python mdoUniq.py - : "at msec"`
   - performs simple uniq between startStr to endStr on each line
-    - if startStr/endStr not found, boundaries are start/end of line
+    - if "-i" or "--ignore-case" then ignore differences in case when comparing
+    - comparison starts at first character of first instance of startStr
+    - comparison stops before first character of first instance of endStr
+    - if startStr|endStr not found, boundaries are start|end of line respectively
+    - if startStr found after endStr, boundaries are entire line
   - writes lines uniq between those two to stdout
   - useful for keeping line numbers but otherwise performing uniq
