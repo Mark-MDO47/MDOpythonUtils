@@ -8,7 +8,8 @@ some short general purpose Python 3.x utilities
   - gotchas: has no real error checking; will barf on UnicodeEncodeError and other errors
 
 - mdoUniq - 
-  - example: `python mdoUniq fname.txt startStr endStr`
+  - example: `python mdoUniq.py fname.txt startStr endStr`
+  - example: `grep -n StateValue debug.txt | python mdoUniq.py - : "at msec"`
   - performs simple uniq between startStr to endStr on each line
   - writes lines uniq between those two to stdout
   - useful for keeping line numbers but otherwise performing uniq
