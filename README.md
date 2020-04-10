@@ -11,5 +11,6 @@ some short general purpose Python 3.x utilities
   - example: `python mdoUniq.py fname.txt startStr endStr`
   - example: `grep -n StateValue debug.txt | python mdoUniq.py - : "at msec"`
   - performs simple uniq between startStr to endStr on each line
+    - if startStr/endStr not found, boundaries are start/end of line
   - writes lines uniq between those two to stdout
   - useful for keeping line numbers but otherwise performing uniq
