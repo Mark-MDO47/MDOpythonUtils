@@ -21,8 +21,14 @@ def ExpandXls(xlsName):
 
 if __name__ == "__main__":
     my_parser = argparse.ArgumentParser(prog='ExpandXls',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
         description="stdout receives tab-separated-values form of data in *.xls or *.xlsx",
-        usage='%(prog)s spreadsheet',)
+        epilog="""Example:
+python ExpandXls.py old.xlsx > old.txt
+python ExpandXls.py new.xlsx > new.txt
+diff old.txt new.txt
+""",
+        usage='%(prog)s spreadsheet')
     my_parser.add_argument('spreadsheet',type=str,help='path to spreadsheet.xls or spreadsheet.xlsx')
     args = my_parser.parse_args()
 
