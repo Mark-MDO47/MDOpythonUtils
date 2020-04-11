@@ -5,20 +5,16 @@
 #
 
 import sys
-import io
+# import io
 import argparse
 
-def mdoUniq(fname, startStr, endStr, ignoreCase):
-    if '-' == fname:
-        fobj = sys.stdin
-    else:
-        fobj = open(fname, 'rt')
+def mdoUniq(fobjInp, fobjOtp, startStr, endStr, ignoreCase):
     if ignoreCase:
         startStr = startStr.upper()
         endStr = endStr.upper()
     # print("startStr |%s| endStr |%s|" % (startStr,endStr))
     prevLine = ""
-    theLine = fobj.readline()
+    theLine = fobjInp.readline()
     while "" != theLine: # null string means EOF
         compareLine = theLine = theLine.strip()
         if ignoreCase:
@@ -38,10 +34,9 @@ def mdoUniq(fname, startStr, endStr, ignoreCase):
             nEnd = len(theLine)
         if prevLine != compareLine[nStart:nEnd]:
             # theLine differs from prevLine, print it
-            print("%s" % theLine)
+            fobjOtp.write("%s\n" % theLine)
         prevLine = compareLine[nStart:nEnd]
-        theLine = fobj.readline()
-    fobj.close()
+        theLine = fobjInp.readline()
 
 if __name__ == "__main__":
     my_parser = argparse.ArgumentParser(prog='mdoUniq',
@@ -84,5 +79,12 @@ $ grep DEBUG mdo.txt | python mdoUniq.py - DEBUG msec
                            help='ignore differences in case when comparing')
     args = my_parser.parse_args()
 
-    mdoUniq(args.fname, args.startStr, args.endStr, args.ignore_case)
+    # opening the file here makes unit test easier
+    if '-' == args.fname:
+        fobjInp = sys.stdin
+    else:
+        fobjInp = open(args.fname, 'rt')
 
+    mdoUniq(fobjInp, sys.stdout, args.startStr, args.endStr, args.ignore_case)
+
+    fobjInp.close()
