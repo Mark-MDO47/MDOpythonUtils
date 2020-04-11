@@ -1,5 +1,7 @@
 1:DEBUG line lowercase msec 10
 2:DEBUG line lowercase Msec 20
 3:dEBUG line lowercase msec 30
+
 4:DEBUG line lowercase msec 40
 5:DEBUG line lowercase msec 50
+5:debug line lowercase MSEC 50
