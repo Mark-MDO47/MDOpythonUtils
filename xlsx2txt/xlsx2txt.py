@@ -1,3 +1,17 @@
+#
+# Author: Mark Olson 2020-04-04
+#
+# This trivial code must have been written dozens of times, but I needed a version for myself.
+# The working part of this code uses pandas, a freely available library, and can be written in 15 lines or less.
+#
+# xlsx2txt - create text form of values in *.xls or *.xlsx; allows quick comparison of files
+#
+# example: python xlsx2txt.py file.xlsx > file.txt
+#  - reads the values from tabs/cells in file.xlsx (not formulas, formatting, etc.)
+#  - writes tab-separated-variable version to stdout in form tabname\tA1\tA2\t...
+#  - gotchas: has no real error checking; will barf on UnicodeEncodeError and other errors
+#
+
 import sys
 import os
 # import copy

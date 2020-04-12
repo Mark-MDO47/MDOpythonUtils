@@ -3,6 +3,23 @@
 #
 # Author: Mark Olson 2019-12-21
 #
+# This trivial code must have been written dozens of times in various languages, but I needed a version for myself.
+#
+# mdoUniq - uniq for part of the line
+#
+# example: python mdoUniq.py fname.txt startStr endStr
+# example: grep -n StateValue debug.txt | python mdoUniq.py - : "at msec"
+# performs simple uniq between startStr to endStr on each line
+#  - if fname is "-", lines to compare are from stdin (allows pipe construct)
+#  - if "-i" or "--ignore-case" then ignore differences in case when comparing
+#  - comparison starts at first character of first instance of startStr
+#  - comparison stops before first character of first instance of endStr
+#  - if startStr|endStr not found, boundaries are start|end of line respectively
+#  - if startStr found after endStr, boundaries are entire line
+#  - writes lines uniq between those two to stdout
+# useful for keeping line numbers but otherwise performing uniq
+# allows checking just the middle portion of the line for uniqueness
+#
 
 import sys
 # import io
