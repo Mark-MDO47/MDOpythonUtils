@@ -12,6 +12,15 @@ from mdoUniq import *
 5:DEBUG line lowercase msec 50
 5:debug line lowercase MSEC 50
 """
+# the file inputTest2.txt looks like this (no blank line)
+"""
+1:DEBUG line lowercase msec 10
+2:DEBUG line lowercase Msec 20
+3:dEBUG line lowercase msec 30
+4:DEBUG line lowercase msec 40
+5:DEBUG line lowercase msec 50
+5:debug line lowercase MSEC 50
+"""
 
 def runCase(finp, startStr, endStr, ignore_case, goldText):
     runPass = True
@@ -49,6 +58,7 @@ def runCase(finp, startStr, endStr, ignore_case, goldText):
     return runPass
 
 cases = [
+    # test1
     {"finp": "inputTest1.txt", "startStr": "a", "endStr": "b", "ignore_case": False,"goldText":
 """1:DEBUG line lowercase msec 10
 2:DEBUG line lowercase Msec 20
@@ -94,7 +104,18 @@ cases = [
 
 4:DEBUG line lowercase msec 40
 5:debug line lowercase MSEC 50"""
+    },
+    # test2
+    {"finp": "inputTest2.txt", "startStr": "D", "endStr": "m", "ignore_case": True, "goldText":
+"""1:DEBUG line lowercase msec 10"""
+},
+    {"finp": "inputTest2.txt", "startStr": "E", "endStr": "m", "ignore_case": False, "goldText":
+"""1:DEBUG line lowercase msec 10
+2:DEBUG line lowercase Msec 20
+3:dEBUG line lowercase msec 30
+5:debug line lowercase MSEC 50"""
     }
+
         ]
 
 # NOTE: the method of implementing gold text depends on \n for newline

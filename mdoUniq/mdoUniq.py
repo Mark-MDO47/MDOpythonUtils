@@ -35,7 +35,6 @@ def doMdoUniq(fname, fobjOtp, startStr, endStr, ignoreCase):
     if ignoreCase:
         startStr = startStr.upper()
         endStr = endStr.upper()
-    # print("startStr |%s| endStr |%s|" % (startStr,endStr))
     prevLine = ""
     theLine = fobjInp.readline()
     while "" != theLine: # null string means EOF
@@ -44,7 +43,6 @@ def doMdoUniq(fname, fobjOtp, startStr, endStr, ignoreCase):
             compareLine = theLine.upper()
         nStart = compareLine.find(startStr)
         nEnd = compareLine.find(endStr)
-        # print("compareLine |%s| nStart=%d nEnd=%d" % (compareLine, nStart, nEnd))
         if -1 == nStart:
             # if startStr not found, then comparison starts at beginning of line
             nStart = 0
@@ -59,7 +57,7 @@ def doMdoUniq(fname, fobjOtp, startStr, endStr, ignoreCase):
             # theLine differs from prevLine, print it
             fobjOtp.write("%s\n" % theLine)
             numLines += 1
-        prevLine = compareLine[nStart:nEnd]
+            prevLine = compareLine[nStart:nEnd]
         theLine = fobjInp.readline()
 
     fobjInp.close()
