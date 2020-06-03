@@ -22,7 +22,7 @@ some short general purpose Python 3.x utilities
 
 - mdoAnsibleLint - start of a simple "lint" for Ansible YAML files
   - inspiration came from spending all day looking for a missing ":"
-    - ansible-playbook and ansible-lint were not leading me to the culprit
+    - ansible-playbook, ansible-lint and yamllint were not leading me to the culprit
   - example: python mdoAnsibleLint.py test.yml
   - for v in `find ansible_mdo -name "*.yml"`; do python mdoAnsibleLint.py $v; done
   - -v, --verbose  always display contents of parsed YAML
