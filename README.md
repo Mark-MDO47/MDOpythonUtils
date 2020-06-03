@@ -19,3 +19,11 @@ some short general purpose Python 3.x utilities
     - if startStr found after endStr, boundaries are entire line
   - writes lines uniq between those two to stdout
   - useful for keeping line numbers but otherwise performing uniq
+
+- mdoAnsibleLint - start of a simple "lint" for Ansible YAML files
+  - inspiration came from spending all day looking for a missing ":"
+    - ansible-playbook and ansible-lint were not leading me to the culprit
+  - example: python mdoAnsibleLint.py test.yml
+  - for v in `find ansible_mdo -name "*.yml"`; do python mdoAnsibleLint.py $v; done
+  - -v, --verbose  always display contents of parsed YAML
+  - at this time, just does yaml.load() then looks for missing ":" at first level
