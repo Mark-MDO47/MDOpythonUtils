@@ -218,11 +218,11 @@ if __name__ == "__main__":
         formatter_class=argparse.RawTextHelpFormatter,
         description="stdout receives tab-separated-values form of data from listFname",
         epilog="""Example:
-python ReadAmazonKindleList.py list.txt prevRatings.txt  > formattedList.txt
+python ReadAmazonKindleList.py list.txt prevRatings.xlsx  > formattedList.txt
 """,
         usage='%(prog)s listFname prevRatingsFname')
     my_parser.add_argument('listFname',type=str,help='path to listFname text file, copied from Kindle book list')
-    my_parser.add_argument('prevRatingsFname',type=str,help='path to previous ratings text file, copied from Kindles book list spreadsheet')
+    my_parser.add_argument('prevRatingsFname',type=str,help='path to previous ratings *.xlsx spreadsheet')
     args = my_parser.parse_args()
 
     doReadAmazonKindleList(args.listFname, args.prevRatingsFname)
