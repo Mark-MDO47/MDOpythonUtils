@@ -27,3 +27,11 @@ some short general purpose Python 3.x utilities
   - example: for v in \`find ansible_mdo -name "*.yml"\`; do python mdoAnsibleLint.py $v; done
   - -v, --verbose  always display contents of parsed YAML
   - at this time, just does yaml.load() then looks for missing ":" at first level
+
+- ReadAmazonKindleList - start of routine to read Amazon Kindle list copied from website and make a spreadsheet
+  - I have columns for favorites, ratings, and re-check that get copied from the old books spreadsheet
+  - example: `python ReadAmazonKindleList.py list.txt prevRatings.xlsx  > formattedList.txt`
+    - list.txt is path to text file, copied from Kindle book list
+    - prevRatings.xlsx is path to previous ratings *.xlsx spreadsheet in tab "Books"
+    - formattedList.txt is tab-separated-variable list
+  - NOTE: there are some extra tabs in prevRatings.xlsx to do special cases for book series; I will elaborate later...
