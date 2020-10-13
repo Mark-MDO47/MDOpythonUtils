@@ -34,4 +34,5 @@ some short general purpose Python 3.x utilities
     - list.txt is path to text file, copied from Kindle book list
     - prevRatings.xlsx is path to previous ratings *.xlsx spreadsheet in tab "Books"
     - formattedList.txt is tab-separated-variable list
+  - NOTE: exampleKindleList.txt shows the format obtained from copying out of the Amazon website
   - NOTE: there are some extra tabs in prevRatings.xlsx to do special cases for book series; I will elaborate later...
