@@ -33,7 +33,15 @@ MONTHS = ["January", "February", "March", "April", "May", "June", "July", "Augus
 TITLE_totalMatch = []
 TITLE_partialMatch = []
 
-
+###################################################################################
+# doReadPreviousRatings()
+#
+# prevRatingsFname spreadsheet has tabs
+#    Books                - previous version of our output spreadsheet
+#                           save ratings, etc. and notice if we don't see one in listFname
+#    TITLE_totalMatch     - if this matches total title then use series and seriesNum
+#    TITLE_partialMatch   - if this matches any part of title then use series and seriesNum
+#
 def doReadPreviousRatings(prevRatingsFname):
     prevRatings = {}
     hdrs = ["FAV", "Rating", "re-check"]
@@ -79,12 +87,24 @@ def doReadPreviousRatings(prevRatingsFname):
             else:
                 tmp.append(row[hdr])
         thekey = row['Title']+"\t"+row['Author']
-        #if -1 != thekey.find("Strange Dogs"):
-        #    print("$$$FOUND$$$ %s" % thekey)
-        prevRatings[thekey] = tmp # Author matches authorRvrs below
+        if thekey in prevRatings:
+            errmsg = "$$$ERROR$$$ %s found more than once in %s tab Books\n" % (thekey, prevRatingsFname)
+            sys.stderr.write(errmsg)
+            sys.stdout.write(errmsg)
+        else:
+            prevRatings[thekey] = tmp # Author matches authorRvrs below
 
     return prevRatings
 
+###################################################################################
+# doReadAmazonKindleList() - print new Kindle tab-separated-variable spreadsheet
+#
+# prevRatingsFname spreadsheet has tabs
+#    Books                - previous version of our output spreadsheet
+#                           save ratings, etc. and notice if we don't see one in listFname
+#    TITLE_totalMatch     - if this matches total title then use series and seriesNum
+#    TITLE_partialMatch   - if this matches any part of title then use series and seriesNum
+#
 def doReadAmazonKindleList(listFname, prevRatingsFname):
     noMatchPrev = []
     sawDots = 0 # this is how we track that we reached another entry
@@ -94,9 +114,10 @@ def doReadAmazonKindleList(listFname, prevRatingsFname):
     series = "" # our attempt to detect the series that the book is a member of
     seriesNum = "" # our attempt to detect which book in the series this is
 
-    # prevRatings is a dictionary with "title": for now [FAV, Rating, re-check]
+    # prevRatings is a dictionary with "title\tauthor": for now [FAV, Rating, re-check]
     # title "prevRatingsHdrs" will give the headers
     prevRatings = doReadPreviousRatings(prevRatingsFname)
+    prevBooks = dict.fromkeys(prevRatings, 1) # we expect to find 1 copy of each book in listFname
 
     # open the Amazon List file; it will tell us if that is a problem
     sys.stderr.write("opening %s\n" % os.path.abspath(listFname))
@@ -179,19 +200,24 @@ def doReadAmazonKindleList(listFname, prevRatingsFname):
                     if -1 != tmp:
                         author = author[:tmp]
                     else:
-                        errmsg = "ERROR - for title %s the line %s may not be author; does not have a month" % (title, author)
-                        print(errmsg)
-                        sys.stderr.write("%s\n" % errmsg)
+                        errmsg = "$$$ERROR$$$ - for title %s the line %s may not be author; does not have a month\n" % (title, author)
+                        sys.stdout.write(errmsg)
+                        sys.stderr.write(errmsg)
 
                     # we have our best guess at the author in first last format; make the last, first format
                     tmp = author.rfind(" ")
                     authorRvrs = author[tmp+1:] + ", " + author[:tmp]
 
+                    thekey = title+"\t"+authorRvrs
+                    if thekey in prevBooks:
+                        if 1 == prevBooks[thekey]:
+                            prevBooks[thekey] = 0
+                        elif 1 != prevBooks[thekey]:
+                            errmsg = "$$$ERROR$$$ %s found more than once in %s\n" (thekey, listFname)
+                            sys.stderr.write(errmsg)
+                            sys.stdout.write(errmsg)
                     # all done; print result and get ready for next entry
                     sys.stdout.write("%s\t%s\t%s\t%s\t%s" % (title, authorRvrs, author, series, seriesNum))
-                    thekey = title+"\t"+authorRvrs
-                    #if -1 != thekey.find("Strange Dogs"):
-                    #    print("$$$FOUND$$$ %s" % thekey)
                     if thekey in prevRatings:
                         for tmp in prevRatings[thekey]:
                             sys.stdout.write("\t%s" % tmp)
@@ -207,7 +233,15 @@ def doReadAmazonKindleList(listFname, prevRatingsFname):
             sawDots = 1
         theLine = fptr.readline() # get the next line and do the while check
 
-    print("\n\nThese books were new, not in prev")
+    prevBooks.pop("prevRatingsHdrs") # this is not a book
+    print("\n\nThese books were in %s but not in %s" % (prevRatingsFname, listFname))
+    for thekey in prevBooks:
+        if 1 == prevBooks[thekey]:
+            print("%s" % thekey)
+
+
+
+    print("\n\nThese books were new, not in %s" % prevRatingsFname)
     for nomatch in noMatchPrev:
         print(nomatch)
 
