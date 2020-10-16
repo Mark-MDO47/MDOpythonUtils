@@ -44,11 +44,8 @@ TITLE_partialMatch = []
 #
 def doReadPreviousRatings(prevRatingsFname):
     prevRatings = {}
-    hdrs = ["FAV", "Rating", "re-check"]
-    prevRatings["prevRatingsHdrs"] = hdrs
-
+    # this was code for reading a tab-separated-variable version of tab 'Books'
     # df = pd.read_table(prevRatingsFname,sep='\t',encoding="cp1252") # I hate Windows smart quotes
-    # print(df.head(3))
 
     # Import the excel file
     xlsPd = pd.ExcelFile(prevRatingsFname)
@@ -77,22 +74,36 @@ def doReadPreviousRatings(prevRatingsFname):
     # get the previous list of books with its ratings
     sheet = "Books"
     df = xlsPd.parse(sheet, header=0)
+    # since the file exists, enter the "extra" headers; we merge this old data into the new list
+    hdrs = ["FAV", "Rating", "re-check"]
+    prevRatings["prevRatingsMergeHdrs"] = hdrs
+    bkHdrs = df.columns.values
+    prevRatings["prevRatingsAllHdrs"] = bkHdrs
+
     for i, row in df.iterrows():
         if pd.isna(row['Title']):
             break
+        """
         tmp = []
         for i, hdr in enumerate(hdrs):
             if pd.isna(row[hdr]):
                 tmp.append("")
             else:
                 tmp.append(row[hdr])
+        """
+        tmp2 = {}
+        for i, hdr in enumerate(bkHdrs):
+            if pd.isna(row[hdr]):
+                tmp2[hdr] = ""
+            else:
+                tmp2[hdr] = row[hdr]
         thekey = row['Title']+"\t"+row['Author']
         if thekey in prevRatings:
             errmsg = "$$$ERROR$$$ %s found more than once in %s tab Books\n" % (thekey, prevRatingsFname)
             sys.stderr.write(errmsg)
             sys.stdout.write(errmsg)
         else:
-            prevRatings[thekey] = tmp # Author matches authorRvrs below
+            prevRatings[thekey] = tmp2 # Author matches authorRvrs below
 
     return prevRatings
 
@@ -115,7 +126,7 @@ def doReadAmazonKindleList(listFname, prevRatingsFname):
     seriesNum = "" # our attempt to detect which book in the series this is
 
     # prevRatings is a dictionary with "title\tauthor": for now [FAV, Rating, re-check]
-    # title "prevRatingsHdrs" will give the headers
+    # title "prevRatingsMergeHdrs" will give the headers
     prevRatings = doReadPreviousRatings(prevRatingsFname)
     prevBooks = dict.fromkeys(prevRatings, 1) # we expect to find 1 copy of each book in listFname
 
@@ -124,10 +135,11 @@ def doReadAmazonKindleList(listFname, prevRatingsFname):
     fptr = open(listFname, 'rt')
 
     # since the file exists, print the header
-    sys.stdout.write("Title\tAuthor\tAuthor (f,m,l)\tSeries\tNum")
-    theHdrs = prevRatings["prevRatingsHdrs"]
-    for hdr in theHdrs:
-        sys.stdout.write("\t%s" % hdr)
+    hdrsOnly = ["prevRatingsAllHdrs", "prevRatingsMergeHdrs"]
+    allHdrs = prevRatings["prevRatingsAllHdrs"]
+    mergeHdrs = prevRatings["prevRatingsMergeHdrs"]
+    for hdr in allHdrs:
+        sys.stdout.write("%s\t" % hdr)
     sys.stdout.write("\n")
 
     # our old-fashioned method to read a text file line by line
@@ -217,13 +229,13 @@ def doReadAmazonKindleList(listFname, prevRatingsFname):
                             sys.stderr.write(errmsg)
                             sys.stdout.write(errmsg)
                     # all done; print result and get ready for next entry
-                    sys.stdout.write("%s\t%s\t%s\t%s\t%s" % (title, authorRvrs, author, series, seriesNum))
+                    sys.stdout.write("%s\t%s\t%s\t%s\t%s\t" % (title, authorRvrs, author, series, seriesNum))
                     if thekey in prevRatings:
-                        for tmp in prevRatings[thekey]:
-                            sys.stdout.write("\t%s" % tmp)
+                        for col in allHdrs:
+                            sys.stdout.write("%s\t" % prevRatings[thekey][col])
                     else:
                         noMatchPrev.append(thekey)
-                        for hdr in theHdrs:
+                        for hdr in mergeHdrs:
                             sys.stdout.write("\t")
                     sys.stdout.write("\n")
                     sawDots = 0
@@ -233,15 +245,26 @@ def doReadAmazonKindleList(listFname, prevRatingsFname):
             sawDots = 1
         theLine = fptr.readline() # get the next line and do the while check
 
-    prevBooks.pop("prevRatingsHdrs") # this is not a book
-    print("\n\nThese books were in %s but not in %s" % (prevRatingsFname, listFname))
+    # if any books were in prevRatingsFname but not in listFname
+    #    first add them to the normal output so we don't lose them
+    #    then notify user
+    prevBooks.pop("prevRatingsMergeHdrs") # this is not a book
+    prevBooks.pop("prevRatingsAllHdrs") # this is not a book
+    for thekey in prevBooks:
+        if 1 == prevBooks[thekey]:
+            for col in allHdrs:
+                sys.stdout.write("%s\t" % prevRatings[thekey][col])
+            sys.stdout.write("\n")
+
+    # notify user if any books were in prevRatingsFname but not in listFname
+    print("\n\nThese books were in %s but not in %s; copied in at end above" % (prevRatingsFname, listFname))
     for thekey in prevBooks:
         if 1 == prevBooks[thekey]:
             print("%s" % thekey)
 
 
 
-    print("\n\nThese books were new, not in %s" % prevRatingsFname)
+    print("\n\nFYI These books were new in %s, not in %s" % (listFname, prevRatingsFname))
     for nomatch in noMatchPrev:
         print(nomatch)
 
