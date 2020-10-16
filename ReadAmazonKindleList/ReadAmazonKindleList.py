@@ -20,7 +20,8 @@
 #    When I cleared the search, it listed book 10 once and book 8 once.
 #    Hmmm...
 # ... and sometimes they will change the Author name: they changed "Adrian Goldsworthy" to "Adrian Keith Goldsworthy"
-# I don't have a solution for that either, but there are some notifications at the end to help you find it.
+#    There is some text output that might help you discover this
+#    flags --oldapproxmatch and --newapproxmatch are one way to deal with it
 
 import sys
 import string
