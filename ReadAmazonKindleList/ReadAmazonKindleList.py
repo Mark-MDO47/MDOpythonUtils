@@ -111,11 +111,11 @@ def doReadPreviousRatings(prevRatingsFname):
 #                           save ratings, etc. and notice if we don't see one in listFname
 #    TITLE_totalMatch     - if this matches total title then use series and seriesNum
 #    TITLE_partialMatch   - if this matches any part of title then use series and seriesNum
-# closeMatchKeepAuthor is "No" for exact matches only on key between the two input files
-#                        "Old" or "New" for close matches allowed (some match on author keyword, exact match title)
-#                        Old author found in prevRatingsFname; New author found in listFname
+# approxMatchKeepAuthor is "No" for exact matches only on key between the two input files
+#                         "Old" or "New" for approx matches allowed (some match on author keyword, exact match title)
+#                         Old author found in prevRatingsFname; New author found in listFname
 #
-def doReadAmazonKindleList(listFname, prevRatingsFname, closeMatchKeepAuthor):
+def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
     noMatchPrev = []
     closeMatchPrev = []
     sawDots = 0 # this is how we track that we reached another entry
@@ -219,13 +219,18 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, closeMatchKeepAuthor):
                     # we have our best guess at the author in first last format; make the last, first format
                     tmp = author.rfind(" ")
                     authorRvrs = author[tmp+1:] + ", " + author[:tmp]
+                    # prevent series number of 1.0
+                    seriesNum = str(seriesNum)
+                    tmp =  seriesNum.find(".")
+                    if -1 != tmp:
+                        seriesNum = seriesNum[:tmp]
 
                     thekey = title+"\t"+authorRvrs
                     closeGood = False
                     closeKey = ""
-                    if -1 != title.find("Spacers"):
-                        print("`Spacers`")
-                    if ("No" != closeMatchKeepAuthor) and (thekey not in prevBooks): # close = exact title match and some match in author
+                    # if -1 != title.find("Spacers"):
+                    #     print("`Spacers`")
+                    if ("No" != approxMatchKeepAuthor) and (thekey not in prevBooks): # close = exact title match and some match in author
                         authorSplit = author.replace(",","").split(" ")
                         for chkKey in prevBooks:
                             if -1 != chkKey.find(title):
@@ -233,21 +238,21 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, closeMatchKeepAuthor):
                                     if -1 != chkKey.find(chkAuth):
                                         closeGood = True # make our author match exactly
                                         closeMatchPrev.append(chkKey + "\tclose match to\t" + thekey)
-                                        if chkKey in prevBooks:
-                                            if 1 != prevBooks[chkKey]:
-                                                errmsg = "$$$ERROR$$$ %s\tclose match to\t%s\tfound more than once in %s\n" % (chkKey, thekey, listFname)
-                                                sys.stderr.write(errmsg)
-                                                sys.stdout.write(errmsg)
-                                            prevBooks[chkKey] = 0
-                                            closeKey = thekey
-                                            theKey = chkKey
-                                        # author = prevRatings[theKey]["Author (f,m,l)"]
-                                        # authorRvrs = prevRatings[theKey]["Author"]
+                                        if 1 != prevBooks[chkKey]:
+                                            errmsg = "$$$ERROR$$$ %s\tclose match to\t%s\tfound more than once in %s\n" % (chkKey, thekey, listFname)
+                                            sys.stderr.write(errmsg)
+                                            sys.stdout.write(errmsg)
+                                        prevBooks[chkKey] = 0
+                                        closeKey = thekey
+                                        theKey = chkKey
+                                        if "Old" == approxMatchKeepAuthor:
+                                            author = prevRatings[theKey]["Author (f,m,l)"]
+                                            authorRvrs = prevRatings[theKey]["Author"]
                                         break
                                 if closeGood:
                                     break
-                    if -1 != title.find("Spacers"):
-                        print("Spacers")
+                    # if -1 != title.find("Spacers"):
+                    #     print("Spacers")
                     if thekey in prevBooks:
                         if 1 != prevBooks[thekey]:
                             errmsg = "$$$ERROR$$$ %s found more than once in %s\n" % (thekey, listFname)
@@ -286,7 +291,15 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, closeMatchKeepAuthor):
     for thekey in prevBooks:
         if 1 == prevBooks[thekey]:
             for col in allHdrs:
-                sys.stdout.write("%s\t" % prevRatings[thekey][col])
+                if "Num" == col:
+                    # prevent series number of 1.0
+                    seriesNum = str(prevRatings[thekey][col])
+                    tmp =  seriesNum.find(".")
+                    if -1 != tmp:
+                        seriesNum = seriesNum[:tmp]
+                        sys.stdout.write("%s\t" % seriesNum)
+                else:
+                    sys.stdout.write("%s\t" % prevRatings[thekey][col])
             sys.stdout.write("\n")
 
     # notify user if any books were in prevRatingsFname but not in listFname
@@ -300,8 +313,8 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, closeMatchKeepAuthor):
         print(nomatch)
 
 
-    if "No" != closeMatchKeepAuthor:
-        print("\n\nFYI These books were a close match in %s and in %s; treated as a match since --xxxclose flag used" % (listFname, prevRatingsFname))
+    if "No" != approxMatchKeepAuthor:
+        print("\n\nFYI These books were a close match in %s and in %s; treated as a match since --%sapproxmatch flag used" % (listFname, prevRatingsFname, approxMatchKeepAuthor.lower()))
         for theCloseMatch in closeMatchPrev:
             print(theCloseMatch)
 
@@ -316,20 +329,20 @@ python ReadAmazonKindleList.py list.txt prevRatings.xlsx  > formattedList.txt
     my_parser.add_argument('listFname',type=str,help='path to listFname text file, copied from Kindle book list')
     my_parser.add_argument('prevRatingsFname',type=str,help='path to previous ratings *.xlsx spreadsheet')
     my_group = my_parser.add_mutually_exclusive_group(required=False)
-    my_parser.add_argument('-cn',
-                           '--newclose',
+    my_parser.add_argument('-n',
+                           '--newapproxmatch',
                            action='store_true',
                            help='accepts close matches in the two input files and preserves new Author; default is exact matches')
-    my_parser.add_argument('-co',
-                           '--oldclose',
+    my_parser.add_argument('-o',
+                           '--oldapproxmatch',
                            action='store_true',
                            help='accepts close matches in the two input files and preserves old Author; default is exact matches')
     args = my_parser.parse_args()
 
-    closeMatchKeepAuthor = "No"
-    if args.newclose:
-        closeMatchKeepAuthor = "New"
-    elif args.oldclose:
-        closeMatchKeepAuthor = "Old"
+    approxMatchKeepAuthor = "No"
+    if args.newapproxmatch:
+        approxMatchKeepAuthor = "New"
+    elif args.oldapproxmatch:
+        approxMatchKeepAuthor = "Old"
 
-    doReadAmazonKindleList(args.listFname, args.prevRatingsFname, closeMatchKeepAuthor)
+    doReadAmazonKindleList(args.listFname, args.prevRatingsFname, approxMatchKeepAuthor)

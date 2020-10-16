@@ -1,22 +1,64 @@
+ (1) example without approximate author match (default)
+ 
 Title	Author	Author (f,m,l)	Series	Num	FAV	Rating	re-check	
 The Heisenberg Corollary: Book One of The Slagmaster Cycles	Duryea, C. H.	C. H. Duryea	 Slagmaster Cycles	1				
-Ancestral Night (White Space Book 1)	Bear, Elizabeth	Elizabeth Bear	White Space	1	Ancestral Night (White Space Book 1)	Bear, Elizabeth	Elizabeth Bear	White Space	1.0				
-SODIUM:1 Harbinger	Arseneault, Stephen	Stephen Arseneault			SODIUM:1 Harbinger	Arseneault, Stephen	Stephen Arseneault						
-Spacers: Free Space	Bartlett, Scott	Scott Bartlett	Spacers	2	Spacers: Free Space	Bartlett, Scott	Scott Bartlett	Spacers	2.0				
-A Shadow in Summer: Book One of The Long Price Quartet	Abraham, Daniel	Daniel Abraham	 Long Price Quartet	1	A Shadow in Summer: Book One of The Long Price Quartet	Abraham, Daniel	Daniel Abraham	Long Price Quartet	1.0				
-The Time Bubble Box Set: Books 1-5: A thrilling series of time travel adventures	Ayres, Jason	Jason Ayres			The Time Bubble Box Set: Books 1-5: A thrilling series of time travel adventures	Ayres, Jason	Jason Ayres						
-Karen Memory	Bear, Elizabeth	Elizabeth Bear			Karen Memory	Bear, Elizabeth	Elizabeth Bear						
-Spacers	Bartlett, Scott	Scott Bartlett	Spacers	1	Spacers	Bartlett, Scott	Scott Bartlett	Spacers	1.0				
+Ancestral Night (White Space Book 1)	Bear, Elizabeth	Elizabeth Bear	White Space	1				
+SODIUM:1 Harbinger	Arseneault, Stephen	Stephen Arseneault						
+Spacers: Free Space	Bartlett, Scott	Scott Bartlett	Spacers	2				
+The Time Bubble Box Set: Books 1-5: A thrilling series of time travel adventures	Ayres, Jason	Jason Ayres						
+Karen Memory	Bear, Elizabeth	Elizabeth Bear					x	
+Spacers	Bartlett, Scott T.	Scott T. Bartlett	Spacers	1				
 Six Bits	Dahners, Laurence	Laurence Dahners						
 The Quantum Thief (Jean le Flambeur Book 1)	Rajaniemi, Hannu	Hannu Rajaniemi	Jean le Flambeur	1				
-Midshipman Henry Gallant in Space (The Henry Gallant Saga Book 1)	Alesso, H. Peter	H. Peter Alesso	Henry Gallant Saga	1	Midshipman Henry Gallant in Space (The Henry Gallant Saga Book 1)	Alesso, H. Peter	H. Peter Alesso	Henry Gallant Saga	1.0				
-Nightfall: A Novel	Asimov, Isaac	Isaac Asimov			Nightfall: A Novel	Asimov, Isaac	Isaac Asimov						
-A Little Hatred (The Age of Madness Book 1)	Abercrombie, Joe	Joe Abercrombie	Age of Madness	1	A Little Hatred (The Age of Madness Book 1)	Abercrombie, Joe	Joe Abercrombie	Age of Madness	1.0	FAV			
-Best Served Cold (First Law Standalones)	Abercrombie, Joe	Joe Abercrombie			Best Served Cold (First Law Standalones)	Abercrombie, Joe	Joe Abercrombie			FAV			
-Sextant: A Young Man's Daring Sea Voyage and the Men Who Mapped the World's Oceans	Barrie, David	David Barrie			GOOD			
+Midshipman Henry Gallant in Space (The Henry Gallant Saga Book 1)	Alesso, H. Peter	H. Peter Alesso	Henry Gallant Saga	1				
+Nightfall: A Novel	Asimov, Isaac	Isaac Asimov						
+A Little Hatred (The Age of Madness Book 1)	Abercrombie, Joe	Joe Abercrombie	Age of Madness	1	FAV			
+Best Served Cold (First Law Standalones)	Abercrombie, Joe	Joe Abercrombie			FAV			
+A Shadow in Summer: Book One of The Long Price Quartet	Abraham, Daniel	Daniel Abraham	Long Price Quartet	1				
+Sextant: A Young Man's Daring Sea Voyage and the Men Who Mapped the World's Oceans	Barrie, David	David Barrie		GOOD			
+Spacers	Bartlett, Scott	Scott Bartlett	Spacers	1				
 
 
 These books were in example_KindleBooks_Favorites.xlsx but not in exampleKindleList.txt; copied in at end above
+A Shadow in Summer: Book One of The Long Price Quartet	Abraham, Daniel
+Sextant: A Young Man's Daring Sea Voyage and the Men Who Mapped the World's Oceans	Barrie, David
+Spacers	Bartlett, Scott
+
+
+FYI These books were new in exampleKindleList.txt, not in example_KindleBooks_Favorites.xlsx
+The Heisenberg Corollary: Book One of The Slagmaster Cycles	Duryea, C. H.
+Spacers	Bartlett, Scott T.
+Six Bits	Dahners, Laurence
+The Quantum Thief (Jean le Flambeur Book 1)	Rajaniemi, Hannu
+ 
+ 
+ 
+ 
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ 
+ 
+ (2) example with approximate author match, preserving OLD author (-o or --oldapproxmatch)
+ 
+Title	Author	Author (f,m,l)	Series	Num	FAV	Rating	re-check	
+The Heisenberg Corollary: Book One of The Slagmaster Cycles	Duryea, C. H.	C. H. Duryea	 Slagmaster Cycles	1				
+Ancestral Night (White Space Book 1)	Bear, Elizabeth	Elizabeth Bear	White Space	1				
+SODIUM:1 Harbinger	Arseneault, Stephen	Stephen Arseneault						
+Spacers: Free Space	Bartlett, Scott	Scott Bartlett	Spacers	2				
+The Time Bubble Box Set: Books 1-5: A thrilling series of time travel adventures	Ayres, Jason	Jason Ayres						
+Karen Memory	Bear, Elizabeth	Elizabeth Bear					x	
+Spacers	Bartlett, Scott	Scott Bartlett	Spacers	1	
+Six Bits	Dahners, Laurence	Laurence Dahners						
+The Quantum Thief (Jean le Flambeur Book 1)	Rajaniemi, Hannu	Hannu Rajaniemi	Jean le Flambeur	1				
+Midshipman Henry Gallant in Space (The Henry Gallant Saga Book 1)	Alesso, H. Peter	H. Peter Alesso	Henry Gallant Saga	1				
+Nightfall: A Novel	Asimov, Isaac	Isaac Asimov						
+A Little Hatred (The Age of Madness Book 1)	Abercrombie, Joe	Joe Abercrombie	Age of Madness	1	FAV			
+Best Served Cold (First Law Standalones)	Abercrombie, Joe	Joe Abercrombie			FAV			
+A Shadow in Summer: Book One of The Long Price Quartet	Abraham, Daniel	Daniel Abraham	Long Price Quartet	1				
+Sextant: A Young Man's Daring Sea Voyage and the Men Who Mapped the World's Oceans	Barrie, David	David Barrie		GOOD			
+
+
+These books were in example_KindleBooks_Favorites.xlsx but not in exampleKindleList.txt; copied in at end above
+A Shadow in Summer: Book One of The Long Price Quartet	Abraham, Daniel
 Sextant: A Young Man's Daring Sea Voyage and the Men Who Mapped the World's Oceans	Barrie, David
 
 
@@ -24,3 +66,47 @@ FYI These books were new in exampleKindleList.txt, not in example_KindleBooks_Fa
 The Heisenberg Corollary: Book One of The Slagmaster Cycles	Duryea, C. H.
 Six Bits	Dahners, Laurence
 The Quantum Thief (Jean le Flambeur Book 1)	Rajaniemi, Hannu
+
+
+FYI These books were a close match in exampleKindleList.txt and in example_KindleBooks_Favorites.xlsx; treated as a match since --oldapproxmatch flag used
+Spacers	Bartlett, Scott	close match to	Spacers	Bartlett, Scott T.
+ 
+ 
+ 
+ 
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ 
+ 
+ (3) example with approximate author match, preserving NEW author (-n or --newapproxmatch)
+ 
+Title	Author	Author (f,m,l)	Series	Num	FAV	Rating	re-check	
+The Heisenberg Corollary: Book One of The Slagmaster Cycles	Duryea, C. H.	C. H. Duryea	 Slagmaster Cycles	1				
+Ancestral Night (White Space Book 1)	Bear, Elizabeth	Elizabeth Bear	White Space	1				
+SODIUM:1 Harbinger	Arseneault, Stephen	Stephen Arseneault						
+Spacers: Free Space	Bartlett, Scott	Scott Bartlett	Spacers	2				
+The Time Bubble Box Set: Books 1-5: A thrilling series of time travel adventures	Ayres, Jason	Jason Ayres						
+Karen Memory	Bear, Elizabeth	Elizabeth Bear					x	
+Spacers	Bartlett, Scott T.	Scott T. Bartlett	Spacers	1	
+Six Bits	Dahners, Laurence	Laurence Dahners						
+The Quantum Thief (Jean le Flambeur Book 1)	Rajaniemi, Hannu	Hannu Rajaniemi	Jean le Flambeur	1				
+Midshipman Henry Gallant in Space (The Henry Gallant Saga Book 1)	Alesso, H. Peter	H. Peter Alesso	Henry Gallant Saga	1				
+Nightfall: A Novel	Asimov, Isaac	Isaac Asimov						
+A Little Hatred (The Age of Madness Book 1)	Abercrombie, Joe	Joe Abercrombie	Age of Madness	1	FAV			
+Best Served Cold (First Law Standalones)	Abercrombie, Joe	Joe Abercrombie			FAV			
+A Shadow in Summer: Book One of The Long Price Quartet	Abraham, Daniel	Daniel Abraham	Long Price Quartet	1				
+Sextant: A Young Man's Daring Sea Voyage and the Men Who Mapped the World's Oceans	Barrie, David	David Barrie		GOOD			
+
+
+These books were in example_KindleBooks_Favorites.xlsx but not in exampleKindleList.txt; copied in at end above
+A Shadow in Summer: Book One of The Long Price Quartet	Abraham, Daniel
+Sextant: A Young Man's Daring Sea Voyage and the Men Who Mapped the World's Oceans	Barrie, David
+
+
+FYI These books were new in exampleKindleList.txt, not in example_KindleBooks_Favorites.xlsx
+The Heisenberg Corollary: Book One of The Slagmaster Cycles	Duryea, C. H.
+Six Bits	Dahners, Laurence
+The Quantum Thief (Jean le Flambeur Book 1)	Rajaniemi, Hannu
+
+
+FYI These books were a close match in exampleKindleList.txt and in example_KindleBooks_Favorites.xlsx; treated as a match since --newapproxmatch flag used
+Spacers	Bartlett, Scott	close match to	Spacers	Bartlett, Scott T.
