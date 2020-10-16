@@ -84,27 +84,19 @@ def doReadPreviousRatings(prevRatingsFname):
     for i, row in df.iterrows():
         if pd.isna(row['Title']):
             break
-        """
-        tmp = []
-        for i, hdr in enumerate(hdrs):
-            if pd.isna(row[hdr]):
-                tmp.append("")
-            else:
-                tmp.append(row[hdr])
-        """
-        tmp2 = {}
+        tmp = {}
         for i, hdr in enumerate(bkHdrs):
             if pd.isna(row[hdr]):
-                tmp2[hdr] = ""
+                tmp[hdr] = ""
             else:
-                tmp2[hdr] = row[hdr]
+                tmp[hdr] = row[hdr]
         thekey = row['Title']+"\t"+row['Author']
         if thekey in prevRatings:
             errmsg = "$$$ERROR$$$ %s found more than once in %s tab Books\n" % (thekey, prevRatingsFname)
             sys.stderr.write(errmsg)
             sys.stdout.write(errmsg)
         else:
-            prevRatings[thekey] = tmp2 # Author matches authorRvrs below
+            prevRatings[thekey] = tmp # Author matches authorRvrs below
 
     return prevRatings
 
