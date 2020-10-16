@@ -48,6 +48,7 @@ def doReadPreviousRatings(prevRatingsFname):
     # df = pd.read_table(prevRatingsFname,sep='\t',encoding="cp1252") # I hate Windows smart quotes
 
     # Import the excel file
+    sys.stderr.write("opening %s\n" % os.path.abspath(prevRatingsFname))
     xlsPd = pd.ExcelFile(prevRatingsFname)
     xlsSheets = xlsPd.sheet_names
 
