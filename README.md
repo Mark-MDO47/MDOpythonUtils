@@ -36,8 +36,8 @@ some short general purpose Python 3.x utilities
     - formattedList.txt is tab-separated-variable list
   - NOTE: exampleKindleList.txt shows the format obtained from copying out of the Amazon website; example_KindleBooks_Favorites.xlsx is an example of my "prevRatings.xslx"
   - NOTE: there are some extra tabs in example_KindleBooks_Favorites.xlsx to do special cases for book series; I will elaborate later...
-  - For example, try `python ReadAmazonKindleList.py exampleKindleList.txt example_KindleBooks_Favorites.xlsx`
-  - For usage text, do `python ReadAmazonKindleList.py -h`
+  - Example: `python ReadAmazonKindleList.py exampleKindleList.txt example_KindleBooks_Favorites.xlsx`
+  - For usage text: `python ReadAmazonKindleList.py -h`
   - To check proper operation including switches, do `source testit.sh` in a GIT Bash or Linux environment. It does a "diff" at the end; if no further output then it matches.
     - `$ source testit.sh`
     - `opening D:\GitHub-Mark-MDO47\MDOpythonUtils\ReadAmazonKindleList\example_KindleBooks_Favorites.xlsx`
