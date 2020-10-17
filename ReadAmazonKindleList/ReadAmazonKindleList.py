@@ -104,6 +104,43 @@ def doReadPreviousRatings(prevRatingsFname):
     return prevRatings
 
 ###################################################################################
+# checkApproxMatch - determine if there is an approximate match
+#
+# Inputs:
+#    theKey - key (title\tauthor) for exact match
+#    prevBooks - 
+#
+# return approxGood, theKey
+#    approxGood - true if (not exact match) and (approximate match)
+#    approxKey - key (title\tauthor) for approx match else ""
+#
+def checkApproxMatch(theKey, prevBooks):
+    approxGood = False
+
+    approxKey = ""
+    splitTheKey = theKey.split("\t")
+    title = splitTheKey[0]
+    author = splitTheKey[1]
+    
+    if theKey not in prevBooks:
+        # approx = exact title match and approx match in author
+        authorSplit = author.replace(",", "").split(" ")
+        for chkKey in prevBooks:
+            if -1 != chkKey.find(title):
+                for chkAuth in authorSplit:
+                    if (len(chkAuth) <= 1) or ((2 == len(chkAuth)) and ("." == chkAuth[1])):
+                        continue  # ignore those tiny cases such as initials
+                    if -1 != chkKey.find(chkAuth):
+                        approxGood = True  # author matches approximately (partially)
+                        approxKey = chkKey
+                        break
+                if approxGood:
+                    break
+    return approxGood, approxKey
+
+
+
+###################################################################################
 # doReadAmazonKindleList() - print new Kindle tab-separated-variable spreadsheet
 #
 # listFname is text file copied from Amazon website for Kindle contents
@@ -117,14 +154,15 @@ def doReadPreviousRatings(prevRatingsFname):
 #                         Old author found in prevRatingsFname; New author found in listFname
 #
 def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
-    noMatchPrev = []
-    approxMatchPrev = []
-    sawDots = 0 # this is how we track that we reached another entry
-    title = ""
+    noMatchPrev = [] # list of keys when no match or approx match with previous
+    approxMatchPrev = [] # if approxMatchKeepAuthor != "No", list possible approx matches
+    approxPossibleMatchPrev = [] # if approxMatchKeepAuthor == "No", list possible approx matches
+    title = ""  # book title
     author = "" # author in first last format
     authorRvrs = "" # author in last, first format
     series = "" # our attempt to detect the series that the book is a member of
     seriesNum = "" # our attempt to detect which book in the series this is
+    sawDots = 0 # this is how we track that we reached another entry
 
     # prevRatings is a dictionary with "title\tauthor": for now [FAV, Rating, re-check]
     # title "prevRatingsMergeHdrs" will give the headers
@@ -233,24 +271,23 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
                 # Now make the key; if it doesn't match and enabled, look for approximate match
                 theKey = title+"\t"+authorRvrs
                 approxGood = False
+                approxPossible = False
+                approxPossibleKey = ""
+
                 if ("No" != approxMatchKeepAuthor) and (theKey not in prevBooks):
-                    # approx = exact title match and some match in author
-                    authorSplit = author.replace(",","").split(" ")
-                    for chkKey in prevBooks:
-                        if -1 != chkKey.find(title):
-                            for chkAuth in authorSplit:
-                                if (len(chkAuth) <= 1) or ((2 == len(chkAuth)) and ("." == chkAuth[1])):
-                                    continue # ignore those tiny cases
-                                if -1 != chkKey.find(chkAuth):
-                                    approxGood = True # make our author match exactly
-                                    approxMatchPrev.append("OLD\t" + chkKey + "\tapprox match to NEW\t" + theKey)
-                                    theKey = chkKey
-                                    if "Old" == approxMatchKeepAuthor:
-                                        author = prevRatings[theKey]["Author (f,m,l)"]
-                                        authorRvrs = prevRatings[theKey]["Author"]
-                                    break
-                            if approxGood:
-                                break
+                    # approx = exact title match and approx match in author
+                    approxGood, approxKey = checkApproxMatch(theKey, prevBooks)
+                    if approxGood:
+                        approxMatchPrev.append("OLD\t" + approxKey + "\tapprox match to NEW\t" + theKey)
+                        theKey = approxKey
+                        if "Old" == approxMatchKeepAuthor:
+                            author = prevRatings[theKey]["Author (f,m,l)"]
+                            authorRvrs = prevRatings[theKey]["Author"]
+                elif "No" == approxMatchKeepAuthor:
+                    # just want to know if it is possible
+                    approxPossible, approxPossibleKey = checkApproxMatch(theKey, prevBooks)
+                    if approxPossible:
+                        approxPossibleMatchPrev.append("OLD\t" + approxPossibleKey + "\tis POSSIBLE approx match to NEW\t" + theKey)
 
                 # check that we only match one time
                 if theKey in prevBooks:
@@ -316,6 +353,10 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
     if "No" != approxMatchKeepAuthor:
         print("\n\nFYI These books were an approximate match in %s and in %s; treated as a match since --%sapproxmatch flag used" % (listFname, prevRatingsFname, approxMatchKeepAuthor.lower()))
         for theApproxMatch in approxMatchPrev:
+            print(theApproxMatch)
+    else:
+        print("\n\nFYI These books were an approximate match in %s and in %s; NOT treated as a match since neither --...approxmatch flag used (new or old)" % (listFname, prevRatingsFname))
+        for theApproxMatch in approxPossibleMatchPrev:
             print(theApproxMatch)
 
 if __name__ == "__main__":

@@ -30,6 +30,10 @@ The Heisenberg Corollary: Book One of The Slagmaster Cycles	Duryea, C. H.
 Spacers	Bartlett, Scott T.
 Six Bits	Dahners, Laurence
 The Quantum Thief (Jean le Flambeur Book 1)	Rajaniemi, Hannu
+
+
+FYI These books were an approximate match in exampleKindleList.txt and in example_KindleBooks_Favorites.xlsx; NOT treated as a match since neither --...approxmatch flag used (new or old)
+OLD	Spacers	Bartlett, Scott	is POSSIBLE approx match to NEW	Spacers	Bartlett, Scott T.
  
  
  
