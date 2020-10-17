@@ -104,6 +104,114 @@ def doReadPreviousRatings(prevRatingsFname):
     return prevRatings
 
 ###################################################################################
+# doProcessTitle(theLine) - handle the title line; attempt to extract the series and seriesNum
+#
+# Inputs:
+#    theLine - line containing tile; already .strip()
+#
+# return - title, series, seriesNum
+#    title - set to theLine
+#    series - either "" or a book series name
+#    seriesNum - either text of a number or (special cases) a sub-title
+#
+def doProcessTitle(theLine):
+    # first line after dots is the title
+    title = theLine
+    series = ""
+    seriesNum = ""
+
+    # Now this is a bit of a stretch: try to find the series and series number in title if possible
+    # First handle special cases from the prevRatingsFname spreadsheet tabs
+    foundSeries = False;
+    title_lower = title.lower()
+    for totMatch in TITLE_totalMatch:
+        if totMatch[0] == title_lower:
+            series = totMatch[1]
+            seriesNum = totMatch[2]
+            foundSeries = True
+            break
+    if (False == foundSeries):
+        for partMatch in TITLE_partialMatch:
+            if -1 != title_lower.find(partMatch[0]):
+                series = partMatch[1]
+                seriesNum = partMatch[2]
+                foundSeries = True
+                break
+
+    # if didn't match special case, look for (series name book #) or (volume...)
+    if (False == foundSeries) and ((-1 != title.rfind("Book ")) or (-1 != title.rfind("Volume "))):
+        tmpBk = title.rfind("Book ")
+        if -1 == tmpBk:
+            tmpBk = title.rfind("Volume ")
+        numBk = title[tmpBk:]
+        tmpSeries = title[:tmpBk].strip()
+        tmpStr = numBk[1 + numBk.find(" "):]
+        if tmpStr.lower() == "one":
+            tmpStr = "1"  # sometimes they say "one" for the first one; go figure...
+        numBk = ""
+        for tmp in range(len(tmpStr)):
+            if False == tmpStr[tmp].isdigit():
+                break
+            numBk += tmpStr[tmp]
+        if 0 != len(numBk):
+            if -1 != tmpSeries.rfind("("):
+                series = tmpSeries[1 + tmpSeries.rfind("("):]
+                seriesNum = numBk
+
+        # now it gets really special case ; don't judge me ;^)
+        if (len(series) - 1) == series.find(","):  # if series name ends with "," remove it
+            series = series[:series.find(",")]
+        tmp = series.lower()
+        if (0 == tmp.find("the ")) and (
+                0 != tmp.find("the way")):  # if series name starts with "the ", remove unless "the way"
+            series = series[4:]
+        elif 0 == tmp.find("a "):  # if series name starts with "a ", remove
+            series = series[2:]
+        elif "april series" == tmp:  # combine "april series" and "april"
+            series = "April"
+
+    return title, series, seriesNum
+
+###################################################################################
+# doProcessAuthor - handle the author line
+#
+# Inputs:
+#    theLine - line containing Author and (strangely) the date acquired; already .strip()
+#
+# return - author, authorRvrs, dateAcquired
+#    author - author as found on the input line: first (middle) last (suffix)
+#    authorRvrs - author in last, first (middle)
+#       NOTE: currently we don't handle suffixes (ex: Jr.)
+#    dateAcquired - text of the date acquired
+#
+def doProcessAuthor(theLine):
+    # second important line after dots is the author BUT...
+    #    it is strangely concatenated with the date; remove the date
+    author = theLine
+    dateAcquired = ""
+
+    for month in MONTHS:
+        tmp = author.rfind(month)
+        if -1 != tmp:
+            break
+    if -1 != tmp:
+        author = author[:tmp]
+        dateAcquired = author[tmp:]
+    else:
+        errmsg = "$$$ERROR$$$ - for title %s the line %s may not be author; does not have a month\n" % (title, author)
+        sys.stdout.write(errmsg)
+        sys.stderr.write(errmsg)
+
+    # we have our best guess at the author in first last format; make the last, first format
+    tmp = author.rfind(" ")
+    if -1 != tmp:
+        authorRvrs = author[tmp + 1:] + ", " + author[:tmp]
+    else:
+        authorRvrs = author # what are you supposed to do here?
+
+    return author, authorRvrs, dateAcquired
+
+###################################################################################
 # checkApproxMatch - determine if there is an approximate match
 #
 # Inputs:
@@ -191,82 +299,12 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
         if (len(theLine) > 0) and ("READ" != theLine) and ("Update Available" != theLine): # don't pay attention to READ or Update Available
             if 1 == sawDots:
                 # first line after dots is the title
-                title = theLine
-                series = ""
-                seriesNum = ""
-
-                # Now this is a bit of a stretch: try to find the series and series number in title if possible
-                # First handle special cases from the prevRatingsFname spreadsheet tabs
-                foundSeries = False;
-                title_lower = title.lower()
-                for totMatch in TITLE_totalMatch:
-                    if totMatch[0] == title_lower:
-                        series = totMatch[1]
-                        seriesNum = totMatch[2]
-                        foundSeries = True
-                        break
-                if (False == foundSeries):
-                    for partMatch in TITLE_partialMatch:
-                        if -1 != title_lower.find(partMatch[0]):
-                            series = partMatch[1]
-                            seriesNum = partMatch[2]
-                            foundSeries = True
-                            break
-
-                # if didn't match special case, look for (series name book #) or (volume...)
-                if (False == foundSeries) and ((-1 != title.rfind("Book ")) or (-1 != title.rfind("Volume "))):
-                    tmpBk = title.rfind("Book ")
-                    if -1 == tmpBk:
-                        tmpBk = title.rfind("Volume ")
-                    numBk = title[tmpBk:]
-                    tmpSeries = title[:tmpBk].strip()
-                    tmpStr = numBk[1+numBk.find(" "):]
-                    if tmpStr.lower() == "one":
-                        tmpStr = "1" # sometimes they say "one" for the first one; go figure...
-                    numBk = ""
-                    for tmp in range(len(tmpStr)):
-                        if False == tmpStr[tmp].isdigit():
-                            break
-                        numBk += tmpStr[tmp]
-                    if 0 != len(numBk):
-                        if -1 != tmpSeries.rfind("("):
-                            series = tmpSeries[1 + tmpSeries.rfind("("):]
-                            seriesNum = numBk
-
-                    # now it gets really special case ; don't judge me ;^)
-                    if (len(series)-1) == series.find(","): # if series name ends with "," remove it
-                        series = series[:series.find(",")]
-                    tmp = series.lower()
-                    if (0 == tmp.find("the ")) and (0 != tmp.find("the way")): # if series name starts with "the ", remove unless "the way"
-                        series = series[4:]
-                    elif 0 == tmp.find("a "):# if series name starts with "a ", remove
-                        series = series[2:]
-                    elif "april series" == tmp: # combine "april series" and "april"
-                        series = "April"
+                title, series, seriesNum = doProcessTitle(theLine)
                 sawDots += 1
             elif 2 == sawDots:
                 # second important line after dots is the author BUT...
                 #    it is strangely concatenated with the date; remove the date
-                author = theLine
-                for month in MONTHS:
-                    tmp = author.rfind(month)
-                    if -1 != tmp:
-                        break
-                if -1 != tmp:
-                    author = author[:tmp]
-                else:
-                    errmsg = "$$$ERROR$$$ - for title %s the line %s may not be author; does not have a month\n" % (title, author)
-                    sys.stdout.write(errmsg)
-                    sys.stderr.write(errmsg)
-
-                # we have our best guess at the author in first last format; make the last, first format
-                tmp = author.rfind(" ")
-                authorRvrs = author[tmp+1:] + ", " + author[:tmp]
-                # prevent series number of 1.0
-                seriesNum = str(seriesNum)
-                tmp =  seriesNum.find(".")
-                if -1 != tmp:
-                    seriesNum = seriesNum[:tmp]
+                author, authorRvrs, dateAcquired = doProcessAuthor(theLine)
 
                 # Now make the key; if it doesn't match and enabled, look for approximate match
                 theKey = title+"\t"+authorRvrs
@@ -296,6 +334,12 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
                         sys.stderr.write(errmsg)
                         sys.stdout.write(errmsg)
                     prevBooks[theKey] = 0
+
+                # prevent series number of 1.0
+                seriesNum = str(seriesNum)
+                tmp =  seriesNum.find(".")
+                if -1 != tmp:
+                    seriesNum = seriesNum[:tmp]
 
                 # all done; print result and get ready for next entry
                 sys.stdout.write("%s\t%s\t%s\t%s\t%s\t" % (title, authorRvrs, author, series, seriesNum))
