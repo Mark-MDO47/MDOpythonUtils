@@ -351,11 +351,11 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
 
 
     if "No" != approxMatchKeepAuthor:
-        print("\n\nFYI These books were an approximate match in %s and in %s; treated as a match since --%sapproxmatch flag used" % (listFname, prevRatingsFname, approxMatchKeepAuthor.lower()))
+        print("\n\nFYI These NEW books were an approximate match in %s and in %s; treated as a match since --%sapproxmatch flag used" % (listFname, prevRatingsFname, approxMatchKeepAuthor.lower()))
         for theApproxMatch in approxMatchPrev:
             print(theApproxMatch)
     else:
-        print("\n\nFYI These books were an approximate match in %s and in %s; NOT treated as a match since neither --...approxmatch flag used (new or old)" % (listFname, prevRatingsFname))
+        print("\n\nFYI These NEW books were an approximate match in %s and in %s; NOT treated as a match since neither --...approxmatch flag used (new or old)" % (listFname, prevRatingsFname))
         for theApproxMatch in approxPossibleMatchPrev:
             print(theApproxMatch)
 
