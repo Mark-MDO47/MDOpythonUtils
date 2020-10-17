@@ -40,9 +40,9 @@ some short general purpose Python 3.x utilities
   - For usage text: `python ReadAmazonKindleList.py -h`
   - To check proper operation including switches, do `source testit.sh` in a GIT Bash or Linux environment. It does a "diff" at the end; if no further output then it matches.
     - `$ source testit.sh`
-    - `opening D:\GitHub-Mark-MDO47\MDOpythonUtils\ReadAmazonKindleList\example_KindleBooks_Favorites.xlsx`
-    - `opening D:\GitHub-Mark-MDO47\MDOpythonUtils\ReadAmazonKindleList\exampleKindleList.txt`
-    - `opening D:\GitHub-Mark-MDO47\MDOpythonUtils\ReadAmazonKindleList\example_KindleBooks_Favorites.xlsx`
-    - `opening D:\GitHub-Mark-MDO47\MDOpythonUtils\ReadAmazonKindleList\exampleKindleList.txt`
-    - `opening D:\GitHub-Mark-MDO47\MDOpythonUtils\ReadAmazonKindleList\example_KindleBooks_Favorites.xlsx`
-    - `opening D:\GitHub-Mark-MDO47\MDOpythonUtils\ReadAmazonKindleList\exampleKindleList.txt`
+    - `opening D:\...\example_KindleBooks_Favorites.xlsx`
+    - `opening D:\...\exampleKindleList.txt`
+    - `opening D:\...\example_KindleBooks_Favorites.xlsx`
+    - `opening D:\...\exampleKindleList.txt`
+    - `opening D:\...\example_KindleBooks_Favorites.xlsx`
+    - `opening D:\...\exampleKindleList.txt`
