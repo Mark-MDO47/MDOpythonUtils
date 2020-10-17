@@ -18,7 +18,7 @@
 # I have seen it list book 10 of a series two times and not list book 8.
 #    When I searched the content for "Book 8", it found it.
 #    When I cleared the search, it listed book 10 once and book 8 once.
-#    Hmmm...
+#    I have code that will keep previously found books and if there are duplicates it keeps the first one with warning.
 # ... and sometimes they will change the Author name: they changed "Adrian Goldsworthy" to "Adrian Keith Goldsworthy"
 #    There is some text output that might help you discover this
 #    flags --oldapproxmatch and --newapproxmatch are one way to deal with it
@@ -93,13 +93,13 @@ def doReadPreviousRatings(prevRatingsFname):
                 tmp[hdr] = ""
             else:
                 tmp[hdr] = row[hdr]
-        thekey = row['Title']+"\t"+row['Author']
-        if thekey in prevRatings:
-            errmsg = "$$$ERROR$$$ %s found more than once in %s tab Books\n" % (thekey, prevRatingsFname)
+        theKey = row['Title']+"\t"+row['Author']
+        if theKey in prevRatings:
+            errmsg = "$$$ERROR$$$ %s found more than once in %s tab Books\n" % (theKey, prevRatingsFname)
             sys.stderr.write(errmsg)
             sys.stdout.write(errmsg)
         else:
-            prevRatings[thekey] = tmp # Author matches authorRvrs below
+            prevRatings[theKey] = tmp # Author matches authorRvrs below
 
     return prevRatings
 
@@ -118,7 +118,7 @@ def doReadPreviousRatings(prevRatingsFname):
 #
 def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
     noMatchPrev = []
-    closeMatchPrev = []
+    approxMatchPrev = []
     sawDots = 0 # this is how we track that we reached another entry
     title = ""
     author = "" # author in first last format
@@ -136,6 +136,9 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
     fptr = open(listFname, 'rt')
 
     # since the file exists, print the header
+    #    hdrsOnly[]: list of column entries in prevRatings for headers:
+    #        allHdrs: "prevRatingsAllHdrs" for all the headers we track
+    #        mergeHdrs: "prevRatingsMergeHdrs" for the ones we merge (personal ratings) from prevRatings to output
     hdrsOnly = ["prevRatingsAllHdrs", "prevRatingsMergeHdrs"]
     allHdrs = prevRatings["prevRatingsAllHdrs"]
     mergeHdrs = prevRatings["prevRatingsMergeHdrs"]
@@ -143,137 +146,131 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
         sys.stdout.write("%s\t" % hdr)
     sys.stdout.write("\n")
 
-    # our old-fashioned method to read a text file line by line
+    # our old-fashioned method to read listFname (a text file) line by line
     theLine = fptr.readline()
     while 0 != len(theLine):
         theLine = theLine.strip()
-        if ("READ" != theLine) and ("Update Available" != theLine): # don't pay attention to READ or Update Available
-            if (len(theLine) > 0) and (0 != sawDots):
-                if 1 == sawDots:
-                    # first line after dots is the title
-                    title = theLine
-                    series = ""
-                    seriesNum = ""
+        if (len(theLine) > 0) and ("READ" != theLine) and ("Update Available" != theLine): # don't pay attention to READ or Update Available
+            if 1 == sawDots:
+                # first line after dots is the title
+                title = theLine
+                series = ""
+                seriesNum = ""
 
-                    # now this is a bit of a stretch: try to find the series and series number if possible
-                    foundSeries = False;
-                    title_lower = title.lower()
-                    for totMatch in TITLE_totalMatch:
-                        if totMatch[0] == title_lower:
-                            series = totMatch[1]
-                            seriesNum = totMatch[2]
+                # Now this is a bit of a stretch: try to find the series and series number in title if possible
+                # First handle special cases from the prevRatingsFname spreadsheet tabs
+                foundSeries = False;
+                title_lower = title.lower()
+                for totMatch in TITLE_totalMatch:
+                    if totMatch[0] == title_lower:
+                        series = totMatch[1]
+                        seriesNum = totMatch[2]
+                        foundSeries = True
+                        break
+                if (False == foundSeries):
+                    for partMatch in TITLE_partialMatch:
+                        if -1 != title_lower.find(partMatch[0]):
+                            series = partMatch[1]
+                            seriesNum = partMatch[2]
                             foundSeries = True
                             break
-                    if (False == foundSeries):
-                        for partMatch in TITLE_partialMatch:
-                            if -1 != title_lower.find(partMatch[0]):
-                                series = partMatch[1]
-                                seriesNum = partMatch[2]
-                                foundSeries = True
-                                break
 
-                    if (False == foundSeries) and ((-1 != title.rfind("Book ")) or (-1 != title.rfind("Volume "))):
-                        tmpBk = title.rfind("Book ")
-                        if -1 == tmpBk:
-                            tmpBk = title.rfind("Volume ")
-                        numBk = title[tmpBk:]
-                        tmpSeries = title[:tmpBk].strip()
-                        tmpStr = numBk[1+numBk.find(" "):]
-                        if tmpStr.lower() == "one":
-                            tmpStr = "1" # sometimes they say one for the first one; go figure...
-                        numBk = ""
-                        for tmp in range(len(tmpStr)):
-                            if False == tmpStr[tmp].isdigit():
-                                break
-                            numBk += tmpStr[tmp]
-                        if 0 != len(numBk):
-                            if -1 != tmpSeries.rfind("("):
-                                series = tmpSeries[1 + tmpSeries.rfind("("):]
-                                seriesNum = numBk
-
-                        # now it gets really special case ; don't judge me ;^)
-                        if (len(series)-1) == series.find(","): # if series name ends with "," remove it
-                            series = series[:series.find(",")]
-                        tmp = series.lower()
-                        if (0 == tmp.find("the ")) and (0 != tmp.find("the way")): # if series name starts with "the ", remove unless "the way"
-                            series = series[4:]
-                        elif 0 == tmp.find("a "):# if series name starts with "a ", remove
-                            series = series[2:]
-                        elif "april series" == tmp: # combine "april series" and "april"
-                            series = "April"
-                    sawDots += 1
-                elif 2 == sawDots:
-                    # second important line after dots is the author BUT...
-                    #    it is strangely concatenated with the date; remove the date
-                    author = theLine
-                    for month in MONTHS:
-                        tmp = author.rfind(month)
-                        if -1 != tmp:
+                # if didn't match special case, look for (series name book #) or (volume...)
+                if (False == foundSeries) and ((-1 != title.rfind("Book ")) or (-1 != title.rfind("Volume "))):
+                    tmpBk = title.rfind("Book ")
+                    if -1 == tmpBk:
+                        tmpBk = title.rfind("Volume ")
+                    numBk = title[tmpBk:]
+                    tmpSeries = title[:tmpBk].strip()
+                    tmpStr = numBk[1+numBk.find(" "):]
+                    if tmpStr.lower() == "one":
+                        tmpStr = "1" # sometimes they say "one" for the first one; go figure...
+                    numBk = ""
+                    for tmp in range(len(tmpStr)):
+                        if False == tmpStr[tmp].isdigit():
                             break
-                    if -1 != tmp:
-                        author = author[:tmp]
-                    else:
-                        errmsg = "$$$ERROR$$$ - for title %s the line %s may not be author; does not have a month\n" % (title, author)
-                        sys.stdout.write(errmsg)
-                        sys.stderr.write(errmsg)
+                        numBk += tmpStr[tmp]
+                    if 0 != len(numBk):
+                        if -1 != tmpSeries.rfind("("):
+                            series = tmpSeries[1 + tmpSeries.rfind("("):]
+                            seriesNum = numBk
 
-                    # we have our best guess at the author in first last format; make the last, first format
-                    tmp = author.rfind(" ")
-                    authorRvrs = author[tmp+1:] + ", " + author[:tmp]
-                    # prevent series number of 1.0
-                    seriesNum = str(seriesNum)
-                    tmp =  seriesNum.find(".")
+                    # now it gets really special case ; don't judge me ;^)
+                    if (len(series)-1) == series.find(","): # if series name ends with "," remove it
+                        series = series[:series.find(",")]
+                    tmp = series.lower()
+                    if (0 == tmp.find("the ")) and (0 != tmp.find("the way")): # if series name starts with "the ", remove unless "the way"
+                        series = series[4:]
+                    elif 0 == tmp.find("a "):# if series name starts with "a ", remove
+                        series = series[2:]
+                    elif "april series" == tmp: # combine "april series" and "april"
+                        series = "April"
+                sawDots += 1
+            elif 2 == sawDots:
+                # second important line after dots is the author BUT...
+                #    it is strangely concatenated with the date; remove the date
+                author = theLine
+                for month in MONTHS:
+                    tmp = author.rfind(month)
                     if -1 != tmp:
-                        seriesNum = seriesNum[:tmp]
+                        break
+                if -1 != tmp:
+                    author = author[:tmp]
+                else:
+                    errmsg = "$$$ERROR$$$ - for title %s the line %s may not be author; does not have a month\n" % (title, author)
+                    sys.stdout.write(errmsg)
+                    sys.stderr.write(errmsg)
 
-                    thekey = title+"\t"+authorRvrs
-                    closeGood = False
-                    closeKey = ""
-                    # if -1 != title.find("Spacers"):
-                    #     print("`Spacers`")
-                    if ("No" != approxMatchKeepAuthor) and (thekey not in prevBooks): # close = exact title match and some match in author
-                        authorSplit = author.replace(",","").split(" ")
-                        for chkKey in prevBooks:
-                            if -1 != chkKey.find(title):
-                                for chkAuth in authorSplit:
-                                    if -1 != chkKey.find(chkAuth):
-                                        closeGood = True # make our author match exactly
-                                        closeMatchPrev.append(chkKey + "\tclose match to\t" + thekey)
-                                        if 1 != prevBooks[chkKey]:
-                                            errmsg = "$$$ERROR$$$ %s\tclose match to\t%s\tfound more than once in %s\n" % (chkKey, thekey, listFname)
-                                            sys.stderr.write(errmsg)
-                                            sys.stdout.write(errmsg)
-                                        prevBooks[chkKey] = 0
-                                        closeKey = thekey
-                                        theKey = chkKey
-                                        if "Old" == approxMatchKeepAuthor:
-                                            author = prevRatings[theKey]["Author (f,m,l)"]
-                                            authorRvrs = prevRatings[theKey]["Author"]
-                                        break
-                                if closeGood:
+                # we have our best guess at the author in first last format; make the last, first format
+                tmp = author.rfind(" ")
+                authorRvrs = author[tmp+1:] + ", " + author[:tmp]
+                # prevent series number of 1.0
+                seriesNum = str(seriesNum)
+                tmp =  seriesNum.find(".")
+                if -1 != tmp:
+                    seriesNum = seriesNum[:tmp]
+
+                # Now make the key; if it doesn't match and enabled, look for approximate match
+                theKey = title+"\t"+authorRvrs
+                approxGood = False
+                if ("No" != approxMatchKeepAuthor) and (theKey not in prevBooks):
+                    # approx = exact title match and some match in author
+                    authorSplit = author.replace(",","").split(" ")
+                    for chkKey in prevBooks:
+                        if -1 != chkKey.find(title):
+                            for chkAuth in authorSplit:
+                                if -1 != chkKey.find(chkAuth):
+                                    approxGood = True # make our author match exactly
+                                    approxMatchPrev.append("OLD\t" + chkKey + "\tapprox match to NEW\t" + theKey)
+                                    theKey = chkKey
+                                    if "Old" == approxMatchKeepAuthor:
+                                        author = prevRatings[theKey]["Author (f,m,l)"]
+                                        authorRvrs = prevRatings[theKey]["Author"]
                                     break
-                    # if -1 != title.find("Spacers"):
-                    #     print("Spacers")
-                    if thekey in prevBooks:
-                        if 1 != prevBooks[thekey]:
-                            errmsg = "$$$ERROR$$$ %s found more than once in %s\n" % (thekey, listFname)
-                            sys.stderr.write(errmsg)
-                            sys.stdout.write(errmsg)
-                        prevBooks[thekey] = 0
+                            if approxGood:
+                                break
 
-                    # all done; print result and get ready for next entry
-                    sys.stdout.write("%s\t%s\t%s\t%s\t%s\t" % (title, authorRvrs, author, series, seriesNum))
-                    if thekey in prevRatings:
-                        for col in mergeHdrs:
-                            sys.stdout.write("%s\t" % prevRatings[thekey][col])
-                    elif False == closeGood:
-                        noMatchPrev.append(thekey)
-                        for hdr in mergeHdrs:
-                            sys.stdout.write("\t")
-                    sys.stdout.write("\n")
-                    sawDots = 0
-                    series = ""
-                    seriesNum = ""
+                # check that we only match one time
+                if theKey in prevBooks:
+                    if 1 != prevBooks[theKey]:
+                        errmsg = "$$$ERROR$$$ %s found more than once in %s\n" % (theKey, listFname)
+                        sys.stderr.write(errmsg)
+                        sys.stdout.write(errmsg)
+                    prevBooks[theKey] = 0
+
+                # all done; print result and get ready for next entry
+                sys.stdout.write("%s\t%s\t%s\t%s\t%s\t" % (title, authorRvrs, author, series, seriesNum))
+                if theKey in prevRatings:
+                    for col in mergeHdrs:
+                        sys.stdout.write("%s\t" % prevRatings[theKey][col])
+                elif False == approxGood:
+                    noMatchPrev.append(theKey)
+                    for hdr in mergeHdrs:
+                        sys.stdout.write("\t")
+                sys.stdout.write("\n")
+                sawDots = 0
+                series = ""
+                seriesNum = ""
         if "..." == theLine:
             sawDots = 1
         theLine = fptr.readline() # get the next line and do the while check
@@ -289,25 +286,25 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
         sys.stderr.write(errmsg)
         sys.stdout.write(errmsg)
     # copy in books at end that were not found in listFname
-    for thekey in prevBooks:
-        if 1 == prevBooks[thekey]:
+    for theKey in prevBooks:
+        if 1 == prevBooks[theKey]:
             for col in allHdrs:
                 if "Num" == col:
                     # prevent series number of 1.0
-                    seriesNum = str(prevRatings[thekey][col])
+                    seriesNum = str(prevRatings[theKey][col])
                     tmp =  seriesNum.find(".")
                     if -1 != tmp:
                         seriesNum = seriesNum[:tmp]
                         sys.stdout.write("%s\t" % seriesNum)
                 else:
-                    sys.stdout.write("%s\t" % prevRatings[thekey][col])
+                    sys.stdout.write("%s\t" % prevRatings[theKey][col])
             sys.stdout.write("\n")
 
     # notify user if any books were in prevRatingsFname but not in listFname
     print("\n\nThese books were in %s but not in %s; copied in at end above" % (prevRatingsFname, listFname))
-    for thekey in prevBooks:
-        if 1 == prevBooks[thekey]:
-            print("%s" % thekey)
+    for theKey in prevBooks:
+        if 1 == prevBooks[theKey]:
+            print("%s" % theKey)
 
     print("\n\nFYI These books were new in %s, not in %s" % (listFname, prevRatingsFname))
     for nomatch in noMatchPrev:
@@ -315,9 +312,9 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
 
 
     if "No" != approxMatchKeepAuthor:
-        print("\n\nFYI These books were a close match in %s and in %s; treated as a match since --%sapproxmatch flag used" % (listFname, prevRatingsFname, approxMatchKeepAuthor.lower()))
-        for theCloseMatch in closeMatchPrev:
-            print(theCloseMatch)
+        print("\n\nFYI These books were an approximate match in %s and in %s; treated as a match since --%sapproxmatch flag used" % (listFname, prevRatingsFname, approxMatchKeepAuthor.lower()))
+        for theApproxMatch in approxMatchPrev:
+            print(theApproxMatch)
 
 if __name__ == "__main__":
     my_parser = argparse.ArgumentParser(prog='ReadAmazonKindleList',
@@ -333,11 +330,11 @@ python ReadAmazonKindleList.py list.txt prevRatings.xlsx  > formattedList.txt
     my_parser.add_argument('-n',
                            '--newapproxmatch',
                            action='store_true',
-                           help='accepts close matches in the two input files and preserves new Author; default is exact matches')
+                           help='accepts approx matches in the two input files and preserves new Author; default is exact matches')
     my_parser.add_argument('-o',
                            '--oldapproxmatch',
                            action='store_true',
-                           help='accepts close matches in the two input files and preserves old Author; default is exact matches')
+                           help='accepts approx matches in the two input files and preserves old Author; default is exact matches')
     args = my_parser.parse_args()
 
     approxMatchKeepAuthor = "No"

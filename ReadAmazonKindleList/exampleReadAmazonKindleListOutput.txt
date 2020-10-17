@@ -46,7 +46,7 @@ SODIUM:1 Harbinger	Arseneault, Stephen	Stephen Arseneault
 Spacers: Free Space	Bartlett, Scott	Scott Bartlett	Spacers	2				
 The Time Bubble Box Set: Books 1-5: A thrilling series of time travel adventures	Ayres, Jason	Jason Ayres						
 Karen Memory	Bear, Elizabeth	Elizabeth Bear					x	
-Spacers	Bartlett, Scott	Scott Bartlett	Spacers	1	
+Spacers	Bartlett, Scott	Scott Bartlett	Spacers	1				
 Six Bits	Dahners, Laurence	Laurence Dahners						
 The Quantum Thief (Jean le Flambeur Book 1)	Rajaniemi, Hannu	Hannu Rajaniemi	Jean le Flambeur	1				
 Midshipman Henry Gallant in Space (The Henry Gallant Saga Book 1)	Alesso, H. Peter	H. Peter Alesso	Henry Gallant Saga	1				
@@ -68,8 +68,8 @@ Six Bits	Dahners, Laurence
 The Quantum Thief (Jean le Flambeur Book 1)	Rajaniemi, Hannu
 
 
-FYI These books were a close match in exampleKindleList.txt and in example_KindleBooks_Favorites.xlsx; treated as a match since --oldapproxmatch flag used
-Spacers	Bartlett, Scott	close match to	Spacers	Bartlett, Scott T.
+FYI These books were an approximate match in exampleKindleList.txt and in example_KindleBooks_Favorites.xlsx; treated as a match since --oldapproxmatch flag used
+OLD	Spacers	Bartlett, Scott	approx match to NEW	Spacers	Bartlett, Scott T.
  
  
  
@@ -86,7 +86,7 @@ SODIUM:1 Harbinger	Arseneault, Stephen	Stephen Arseneault
 Spacers: Free Space	Bartlett, Scott	Scott Bartlett	Spacers	2				
 The Time Bubble Box Set: Books 1-5: A thrilling series of time travel adventures	Ayres, Jason	Jason Ayres						
 Karen Memory	Bear, Elizabeth	Elizabeth Bear					x	
-Spacers	Bartlett, Scott T.	Scott T. Bartlett	Spacers	1	
+Spacers	Bartlett, Scott T.	Scott T. Bartlett	Spacers	1				
 Six Bits	Dahners, Laurence	Laurence Dahners						
 The Quantum Thief (Jean le Flambeur Book 1)	Rajaniemi, Hannu	Hannu Rajaniemi	Jean le Flambeur	1				
 Midshipman Henry Gallant in Space (The Henry Gallant Saga Book 1)	Alesso, H. Peter	H. Peter Alesso	Henry Gallant Saga	1				
@@ -108,5 +108,5 @@ Six Bits	Dahners, Laurence
 The Quantum Thief (Jean le Flambeur Book 1)	Rajaniemi, Hannu
 
 
-FYI These books were a close match in exampleKindleList.txt and in example_KindleBooks_Favorites.xlsx; treated as a match since --newapproxmatch flag used
-Spacers	Bartlett, Scott	close match to	Spacers	Bartlett, Scott T.
+FYI These books were an approximate match in exampleKindleList.txt and in example_KindleBooks_Favorites.xlsx; treated as a match since --newapproxmatch flag used
+OLD	Spacers	Bartlett, Scott	approx match to NEW	Spacers	Bartlett, Scott T.
