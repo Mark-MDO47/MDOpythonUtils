@@ -28,6 +28,7 @@ import string
 import os
 import argparse
 import pandas as pd
+import datetime
 
 MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
@@ -195,8 +196,8 @@ def doProcessAuthor(theLine):
         if -1 != tmp:
             break
     if -1 != tmp:
-        author = author[:tmp]
         dateAcquired = author[tmp:]
+        author = author[:tmp]
     else:
         errmsg = "$$$ERROR$$$ - for title %s the line %s may not be author; does not have a month\n" % (title, author)
         sys.stdout.write(errmsg)
@@ -342,7 +343,7 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
                     seriesNum = seriesNum[:tmp]
 
                 # all done; print result and get ready for next entry
-                sys.stdout.write("%s\t%s\t%s\t%s\t%s\t" % (title, authorRvrs, author, series, seriesNum))
+                sys.stdout.write("%s\t%s\t%s\t%s\t%s\t%s\t" % (title, authorRvrs, author, series, seriesNum, dateAcquired))
                 if theKey in prevRatings:
                     for col in mergeHdrs:
                         sys.stdout.write("%s\t" % prevRatings[theKey][col])
@@ -378,7 +379,14 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
                     tmp =  seriesNum.find(".")
                     if -1 != tmp:
                         seriesNum = seriesNum[:tmp]
-                        sys.stdout.write("%s\t" % seriesNum)
+                    sys.stdout.write("%s\t" % seriesNum)
+                elif "DateAcq" == col:
+                    # don't include " 00:00:00"
+                    if (str(type(prevRatings[theKey][col])) == "<class \'pandas._libs.tslibs.timestamps.Timestamp\'>") or \
+                            (str(type(prevRatings[theKey][col])) == "<class 'datetime.datetime'>"):
+                        sys.stdout.write("%s\t" % prevRatings[theKey][col].strftime("%B %d, %Y"))
+                    else:
+                        sys.stdout.write("%s\t" % prevRatings[theKey][col])
                 else:
                     sys.stdout.write("%s\t" % prevRatings[theKey][col])
             sys.stdout.write("\n")
