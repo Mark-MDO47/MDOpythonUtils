@@ -113,7 +113,7 @@ def doReadPreviousRatings(prevRatingsFname):
 #    TITLE_totalMatch     - if this matches total title then use series and seriesNum
 #    TITLE_partialMatch   - if this matches any part of title then use series and seriesNum
 # approxMatchKeepAuthor is "No" for exact matches only on key between the two input files
-#                         "Old" or "New" for approx matches allowed (some match on author keyword, exact match title)
+#                         "Old" or "New" for approx matches allowed (approx match on author keyword, exact match title)
 #                         Old author found in prevRatingsFname; New author found in listFname
 #
 def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
@@ -239,6 +239,8 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
                     for chkKey in prevBooks:
                         if -1 != chkKey.find(title):
                             for chkAuth in authorSplit:
+                                if (len(chkAuth) <= 1) or ((2 == len(chkAuth)) and ("." == chkAuth[1])):
+                                    continue # ignore those tiny cases
                                 if -1 != chkKey.find(chkAuth):
                                     approxGood = True # make our author match exactly
                                     approxMatchPrev.append("OLD\t" + chkKey + "\tapprox match to NEW\t" + theKey)
