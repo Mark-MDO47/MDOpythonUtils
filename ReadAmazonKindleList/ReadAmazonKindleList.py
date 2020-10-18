@@ -171,6 +171,13 @@ def doProcessTitle(theLine):
         elif "april series" == tmp:  # combine "april series" and "april"
             series = "April"
 
+    # now clean up a little for pretty printout
+    # prevent series number of 1.0
+    seriesNum = str(seriesNum)
+    tmp = seriesNum.find(".")
+    if -1 != tmp:
+        seriesNum = seriesNum[:tmp]
+
     return title, series, seriesNum
 
 ###################################################################################
@@ -307,40 +314,39 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
                 #    it is strangely concatenated with the date; remove the date
                 author, authorRvrs, dateAcquired = doProcessAuthor(theLine)
 
-                # Now make the key; if it doesn't match and enabled, look for approximate match
-                theKey = title+"\t"+authorRvrs
-                approxGood = False
-                approxPossible = False
-                approxPossibleKey = ""
+                # Now make the key to prevRatingsFname (and prevBooks) and see if it is there with exact match
+                #     if it doesn't match and approx is enabled, look for approximate match
+                #     if it doesn't match and approx is disabled, look anyway to give a warning
+                theKey = title+"\t"+authorRvrs # key is title+tab+author where author is "lastname, firstname ..."
+                approxGood = False # True if (approx ENabled) and (no exact match) and (yes approx match)
+                approxPossible = False # True if (approx DISabled) and (no exact match) and (yes approx match)
+                approxPossibleKey = "" # non-null if approxPossible True
 
                 if ("No" != approxMatchKeepAuthor) and (theKey not in prevBooks):
                     # approx = exact title match and approx match in author
                     approxGood, approxKey = checkApproxMatch(theKey, prevBooks)
                     if approxGood:
+                        # (approx ENabled) and (no exact match) and (yes approx match)
                         approxMatchPrev.append("OLD\t" + approxKey + "\tapprox match to NEW\t" + theKey)
                         theKey = approxKey
                         if "Old" == approxMatchKeepAuthor:
                             author = prevRatings[theKey]["Author (f,m,l)"]
                             authorRvrs = prevRatings[theKey]["Author"]
                 elif "No" == approxMatchKeepAuthor:
-                    # just want to know if it is possible
+                    # just want to know if it is possible even though they didn't ask for it
                     approxPossible, approxPossibleKey = checkApproxMatch(theKey, prevBooks)
                     if approxPossible:
+                        # (approx Disabled) and (no exact match) and (yes approx match)
                         approxPossibleMatchPrev.append("OLD\t" + approxPossibleKey + "\tis POSSIBLE approx match to NEW\t" + theKey)
 
-                # check that we only match one time
+                # check that we only match betweeen listFname and prevRatingsFname one time
+                # if (approx ENabled) and (no exact match) and (yes approx match), theKey is approx key
                 if theKey in prevBooks:
                     if 1 != prevBooks[theKey]:
                         errmsg = "$$$ERROR$$$ %s found more than once in %s\n" % (theKey, listFname)
                         sys.stderr.write(errmsg)
                         sys.stdout.write(errmsg)
                     prevBooks[theKey] = 0
-
-                # prevent series number of 1.0
-                seriesNum = str(seriesNum)
-                tmp =  seriesNum.find(".")
-                if -1 != tmp:
-                    seriesNum = seriesNum[:tmp]
 
                 # all done; print result and get ready for next entry
                 sys.stdout.write("%s\t%s\t%s\t%s\t%s\t%s\t" % (title, authorRvrs, author, series, seriesNum, dateAcquired))
@@ -359,17 +365,20 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
             sawDots = 1
         theLine = fptr.readline() # get the next line and do the while check
 
-    # if any books were in prevRatingsFname but not in listFname
-    #    first add them to the normal output so we don't lose them
-    #    then notify user
-    # NOTE - cannot do for aKey in hdrsOnly: since that changes dictionary and continues looping
+    # clean out special entries in prevBooks with column headers
+    # NOTE - python says cannot pop() when doing 'for aKey in hdrsOnly:' - that changes dictionary & continues looping
     prevBooks.pop(hdrsOnly[0]) # this is not a book
     prevBooks.pop(hdrsOnly[1]) # this is not a book
     if 2 != len(hdrsOnly):
         errmsg = "$$$ERROR$$$ expected hdrsOnly length 2 is length %d" % len(hdrsOnly)
         sys.stderr.write(errmsg)
         sys.stdout.write(errmsg)
-    # copy in books at end that were not found in listFname
+
+    # any books in listFname have already been output
+    # if any books were in prevRatingsFname but not in listFname
+    #    first add them to the normal output above so we don't lose them
+    #    then notify user
+    # copy books to end of output that were not found in listFname but found in prevRatingsFname
     for theKey in prevBooks:
         if 1 == prevBooks[theKey]:
             for col in allHdrs:
@@ -381,7 +390,7 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
                         seriesNum = seriesNum[:tmp]
                     sys.stdout.write("%s\t" % seriesNum)
                 elif "DateAcq" == col:
-                    # don't include " 00:00:00"
+                    # don't include " 00:00:00" that we get from reading *.xlsx
                     if (str(type(prevRatings[theKey][col])) == "<class \'pandas._libs.tslibs.timestamps.Timestamp\'>") or \
                             (str(type(prevRatings[theKey][col])) == "<class 'datetime.datetime'>"):
                         sys.stdout.write("%s\t" % prevRatings[theKey][col].strftime("%B %d, %Y"))
@@ -397,11 +406,13 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
         if 1 == prevBooks[theKey]:
             print("%s" % theKey)
 
+    # notify user if any books were in listFname but not in prevRatingsFname
     print("\n\nFYI These books were new in %s, not in %s" % (listFname, prevRatingsFname))
     for nomatch in noMatchPrev:
         print(nomatch)
 
 
+    # notify user of any approximate matches, whether they asked for approx or not
     if "No" != approxMatchKeepAuthor:
         print("\n\nFYI These NEW books were an approximate match in %s and in %s; treated as a match since --%sapproxmatch flag used" % (listFname, prevRatingsFname, approxMatchKeepAuthor.lower()))
         for theApproxMatch in approxMatchPrev:
@@ -411,6 +422,13 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
         for theApproxMatch in approxPossibleMatchPrev:
             print(theApproxMatch)
 
+
+###################################################################################
+# "main" processing for ReadAmazonKindleList
+#
+# use argparse to process command line arguments
+# python ReadAmazonKindleList.py -h to see what the arguments are
+#
 if __name__ == "__main__":
     my_parser = argparse.ArgumentParser(prog='ReadAmazonKindleList',
         formatter_class=argparse.RawTextHelpFormatter,
@@ -432,10 +450,12 @@ python ReadAmazonKindleList.py list.txt prevRatings.xlsx  > formattedList.txt
                            help='accepts approx matches in the two input files and preserves old Author; default is exact matches')
     args = my_parser.parse_args()
 
+    # transmogrify user flags for approxmatch
     approxMatchKeepAuthor = "No"
     if args.newapproxmatch:
         approxMatchKeepAuthor = "New"
     elif args.oldapproxmatch:
         approxMatchKeepAuthor = "Old"
 
+    # all the real work is done here
     doReadAmazonKindleList(args.listFname, args.prevRatingsFname, approxMatchKeepAuthor)
