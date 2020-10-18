@@ -14,14 +14,14 @@
 #
 # Disturbingly, sometimes the Kindle Library list will have a book more than once
 # and sometimes it will not list a book that you actually have.
-# I don't have a solution for that.
+# I don't have a solution for that, but I do print some alerts.
 # I have seen it list book 10 of a series two times and not list book 8.
 #    When I searched the content for "Book 8", it found it.
 #    When I cleared the search, it listed book 10 once and book 8 once.
-#    I have code that will keep previously found books and if there are duplicates it keeps the first one with warning.
+#    I have code that will keep previously found books and if there are duplicates it keeps the first one with an alert.
 # ... and sometimes they will change the Author name: they changed "Adrian Goldsworthy" to "Adrian Keith Goldsworthy"
-#    There is some text output that might help you discover this
-#    flags --oldapproxmatch and --newapproxmatch are one way to deal with it
+#    There is some text output that might help alert you to this
+#    flags --oldapproxmatch and --newapproxmatch are one way to help deal with it
 
 import sys
 import string
