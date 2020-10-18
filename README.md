@@ -29,18 +29,19 @@ some short general purpose Python 3.x utilities
   - at this time, just does yaml.load() then looks for missing ":" at first level
 
 - ReadAmazonKindleList - start of routine to read Amazon Kindle list copied from website and make a spreadsheet
-  - I have columns for favorites, ratings, and re-check that get copied from the old books spreadsheet
+  - For usage text: `python ReadAmazonKindleList.py -h`
+  - Input spreadsheet and stdout have columns for favorites, ratings, and re-check that get copied from the old books spreadsheet
   - example: `python ReadAmazonKindleList.py list.txt prevRatings.xlsx  > formattedList.txt`
     - list.txt is path to text file, copied from Kindle book list
     - prevRatings.xlsx is path to previous ratings *.xlsx spreadsheet in tab "Books"
     - formattedList.txt is tab-separated-variable list
-  - NOTE: exampleKindleList.txt shows the format obtained from copying out of the Amazon website; example_KindleBooks_Favorites.xlsx is an example of my "prevRatings.xslx"
-  - prevRatingsFname spreadsheet has tabs
+  - NOTE: **exampleKindleList.txt** shows the list.txt format obtained from copying out of the Amazon website
+  - NOTE: **example_KindleBooks_Favorites.xlsx** is an example of my "prevRatings.xslx"
+  - prevRatings.xlsx spreadsheet has tabs
     - Books                - previous version of our output spreadsheet
     - TITLE_totalMatch     - if this matches total title then use series and seriesNum
     - TITLE_partialMatch   - if this matches any part of title then use series and seriesNum
   - Example: `python ReadAmazonKindleList.py exampleKindleList.txt example_KindleBooks_Favorites.xlsx`
-  - For usage text: `python ReadAmazonKindleList.py -h`
   - To check proper operation including switches, do `source testit.sh` in a GIT Bash or Linux environment. It does a "diff" at the end; if no further output then it matches.
     - `$ source testit.sh`
     - `opening D:\...\example_KindleBooks_Favorites.xlsx`
