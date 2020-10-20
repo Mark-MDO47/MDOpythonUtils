@@ -340,7 +340,7 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
                         approxPossibleMatchPrev.append("OLD\t" + approxPossibleKey + "\tis POSSIBLE approx match to NEW\t" + theKey)
 
                 # check that we only match betweeen listFname and prevRatingsFname one time
-                # if (approx ENabled) and (no exact match) and (yes approx match), theKey is approx key
+                # if (approx ENabled) and (no exact match) and (yes approx match), "theKey" is now  approxKey
                 if theKey in prevBooks:
                     if 1 != prevBooks[theKey]:
                         errmsg = "$$$ERROR$$$ %s found more than once in %s\n" % (theKey, listFname)
@@ -349,7 +349,9 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
                     prevBooks[theKey] = 0
 
                 # all done; print result and get ready for next entry
+                # first print the columns from listFname
                 sys.stdout.write("%s\t%s\t%s\t%s\t%s\t%s\t" % (title, authorRvrs, author, series, seriesNum, dateAcquired))
+                # then print out columns from match or approx match
                 if theKey in prevRatings:
                     for col in mergeHdrs:
                         sys.stdout.write("%s\t" % prevRatings[theKey][col])
@@ -358,6 +360,8 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
                     for hdr in mergeHdrs:
                         sys.stdout.write("\t")
                 sys.stdout.write("\n")
+
+                # start search for next entry
                 sawDots = 0
                 series = ""
                 seriesNum = ""
@@ -369,7 +373,7 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
     # NOTE - python says cannot pop() when doing 'for aKey in hdrsOnly:' - that changes dictionary & continues looping
     prevBooks.pop(hdrsOnly[0]) # this is not a book
     prevBooks.pop(hdrsOnly[1]) # this is not a book
-    if 2 != len(hdrsOnly):
+    if 2 != len(hdrsOnly): # just a warning if we get more headers, need to change code above (sigh)
         errmsg = "$$$ERROR$$$ expected hdrsOnly length 2 is length %d" % len(hdrsOnly)
         sys.stderr.write(errmsg)
         sys.stdout.write(errmsg)
