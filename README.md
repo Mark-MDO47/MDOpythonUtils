@@ -28,7 +28,7 @@ some short general purpose Python 3.x utilities
 - -v, --verbose  always display contents of parsed YAML
 - at this time, just does yaml.load() then looks for missing ":" at first level
 
-## ReadAmazonKindleList - start of routine to read Amazon Kindle list copied from website and make a spreadsheet
+## ReadAmazonKindleList - Read Amazon Kindle list copied from website and make a spreadsheet
 - For usage text: `python ReadAmazonKindleList.py -h`
 - Input spreadsheet and stdout have columns for favorites, ratings, and re-check that get copied from the old books spreadsheet
 - example: `python ReadAmazonKindleList.py list.txt prevRatings.xlsx  > formattedList.txt`
