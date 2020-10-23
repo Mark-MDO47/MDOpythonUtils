@@ -45,6 +45,7 @@ TITLE_partialMatch = []
 #                           save ratings, etc. and notice if we don't see one in listFname
 #    TITLE_totalMatch     - if this matches total title then use series and seriesNum
 #    TITLE_partialMatch   - if this matches any part of title then use series and seriesNum
+# NOTE: titles in TITLE_totalMatch and TITLE_partialMatch are all made lower-case when we return
 #
 def doReadPreviousRatings(prevRatingsFname):
     prevRatings = {}
@@ -56,23 +57,23 @@ def doReadPreviousRatings(prevRatingsFname):
     xlsPd = pd.ExcelFile(prevRatingsFname)
     xlsSheets = xlsPd.sheet_names
 
-    # get special cases for a total title match
+    # get special cases for a total title match - make them all lower case
     sheet = "TITLE_totalMatch"
     df = xlsPd.parse(sheet, header=0)
     for i, row in df.iterrows():
         if pd.isna(row['a']):
             break
-        tmp = [row['a'], row['b'], row['c']]
+        tmp = [row['a'].lower(), row['b'], row['c']]
         TITLE_totalMatch.append(tmp)
     del df
 
-    # get special cases for a partial title match
+    # get special cases for a partial title match - make them all lower case
     sheet = "TITLE_partialMatch"
     df = xlsPd.parse(sheet, header=0)
     for i, row in df.iterrows():
         if pd.isna(row['a']):
             break
-        tmp = [row['a'], row['b'], row['c']]
+        tmp = [row['a'].lower(), row['b'], row['c']]
         TITLE_partialMatch.append(tmp)
     del df
 
