@@ -41,6 +41,7 @@ some short general purpose Python 3.x utilities
   - Books                - previous version of our output spreadsheet
   - TITLE_totalMatch     - if this matches total title then use series and seriesNum
   - TITLE_partialMatch   - if this matches any part of title then use series and seriesNum
+- for the Match tabs, upper/lower case is ignored in the match
 - Example: `python ReadAmazonKindleList.py exampleKindleList.txt example_KindleBooks_Favorites.xlsx`
 - To check proper operation including switches, do `source testit.sh` in a GIT Bash or Linux environment. It does a "diff" at the end; if no further output then it matches.
   - `$ source testit.sh`
