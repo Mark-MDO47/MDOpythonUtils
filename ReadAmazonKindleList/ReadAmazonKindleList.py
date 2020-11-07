@@ -279,6 +279,7 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
     authorRvrs = "" # author in last, first format
     series = "" # our attempt to detect the series that the book is a member of
     seriesNum = "" # our attempt to detect which book in the series this is
+    didRead = ""  # tells if we read the book already
     sawDots = 0 # this is how we track that we reached another entry
 
     # prevRatings is a dictionary with "title\tauthor": for now [FAV, Rating, re-check]
@@ -305,11 +306,14 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
     theLine = fptr.readline()
     while 0 != len(theLine):
         theLine = theLine.strip()
-        if (len(theLine) > 0) and ("READ" != theLine) and ("Update Available" != theLine): # don't pay attention to READ or Update Available
+        if (len(theLine) > 0) and ("Update Available" != theLine): # don't pay attention to READ or Update Available
             if 1 == sawDots:
                 # first line after dots is the title
                 title, series, seriesNum = doProcessTitle(theLine)
                 sawDots += 1
+            elif (2 == sawDots) and ("READ" == theLine):
+                # second line after dots MIGHT be "READ"
+                didRead = "READ"
             elif 2 == sawDots:
                 # second important line after dots is the author BUT...
                 #    it is strangely concatenated with the date; remove the date
@@ -351,7 +355,7 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
 
                 # all done; print result and get ready for next entry
                 # first print the columns from listFname
-                sys.stdout.write("%s\t%s\t%s\t%s\t%s\t%s\t" % (title, authorRvrs, author, series, seriesNum, dateAcquired))
+                sys.stdout.write("%s\t%s\t%s\t%s\t%s\t%s\t%s\t" % (title, authorRvrs, author, series, seriesNum, didRead, dateAcquired))
                 # then print out columns from match or approx match
                 if theKey in prevRatings:
                     for col in mergeHdrs:
@@ -366,6 +370,7 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
                 sawDots = 0
                 series = ""
                 seriesNum = ""
+                didRead = "" # tells if we read the book already
         if "..." == theLine:
             sawDots = 1
         theLine = fptr.readline() # get the next line and do the while check

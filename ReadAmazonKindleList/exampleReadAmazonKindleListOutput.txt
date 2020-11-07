@@ -1,19 +1,19 @@
  (1) example without approximate author match (default)
  
 Title	Author	Author (f,m,l)	Series	Num	DateAcq	FAV	Rating	re-check	
-The Heisenberg Corollary: Book One of The Slagmaster Cycles	Duryea, C. H.	C. H. Duryea	Slagmaster Cycles	1	October 8, 2020				
-Ancestral Night (White Space Book 1)	Bear, Elizabeth	Elizabeth Bear	White Space	1	March 8, 2019				
-SODIUM:1 Harbinger	Arseneault, Stephen	Stephen Arseneault			January 31, 2014				
-Spacers: Free Space	Bartlett, Scott	Scott Bartlett	Spacers	2	September 22, 2019				
-The Time Bubble Box Set: Books 1-5: A thrilling series of time travel adventures	Ayres, Jason	Jason Ayres			November 24, 2019				
-Karen Memory	Bear, Elizabeth	Elizabeth Bear			March 8, 2019			x	
-Spacers	Bartlett, Scott T.	Scott T. Bartlett	Spacers	1	September 15, 2019				
-Six Bits	Dahners, Laurence	Laurence Dahners			October 8, 2020				
-The Quantum Thief (Jean le Flambeur Book 1)	Rajaniemi, Hannu	Hannu Rajaniemi	Jean le Flambeur	1	October 8, 2020				
-Midshipman Henry Gallant in Space (The Henry Gallant Saga Book 1)	Alesso, H. Peter	H. Peter Alesso	Henry Gallant Saga	1	June 3, 2020				
-Nightfall: A Novel	Asimov, Isaac	Isaac Asimov			November 17, 2019				
-A Little Hatred (The Age of Madness Book 1)	Abercrombie, Joe	Joe Abercrombie	Age of Madness	1	September 16, 2019	FAV			
-Best Served Cold (First Law Standalones)	Abercrombie, Joe	Joe Abercrombie			March 17, 2020	FAV			
+The Heisenberg Corollary: Book One of The Slagmaster Cycles	Duryea, C. H.	C. H. Duryea	Slagmaster Cycles	1		October 8, 2020				
+Ancestral Night (White Space Book 1)	Bear, Elizabeth	Elizabeth Bear	White Space	1	READ	March 8, 2019				
+SODIUM:1 Harbinger	Arseneault, Stephen	Stephen Arseneault				January 31, 2014				
+Spacers: Free Space	Bartlett, Scott	Scott Bartlett	Spacers	2		September 22, 2019				
+The Time Bubble Box Set: Books 1-5: A thrilling series of time travel adventures	Ayres, Jason	Jason Ayres				November 24, 2019				
+Karen Memory	Bear, Elizabeth	Elizabeth Bear			READ	March 8, 2019			x	
+Spacers	Bartlett, Scott T.	Scott T. Bartlett	Spacers	1	READ	September 15, 2019				
+Six Bits	Dahners, Laurence	Laurence Dahners				October 8, 2020				
+The Quantum Thief (Jean le Flambeur Book 1)	Rajaniemi, Hannu	Hannu Rajaniemi	Jean le Flambeur	1		October 8, 2020				
+Midshipman Henry Gallant in Space (The Henry Gallant Saga Book 1)	Alesso, H. Peter	H. Peter Alesso	Henry Gallant Saga	1	READ	June 3, 2020				
+Nightfall: A Novel	Asimov, Isaac	Isaac Asimov				November 17, 2019				
+A Little Hatred (The Age of Madness Book 1)	Abercrombie, Joe	Joe Abercrombie	Age of Madness	1	READ	September 16, 2019	FAV			
+Best Served Cold (First Law Standalones)	Abercrombie, Joe	Joe Abercrombie			READ	March 17, 2020	FAV			
 A Shadow in Summer: Book One of The Long Price Quartet	Abraham, Daniel	Daniel Abraham	Long Price Quartet	1	June 28, 2020				
 Sextant: A Young Man's Daring Sea Voyage and the Men Who Mapped the World's Oceans	Barrie, David	David Barrie			July 06, 2019	GOOD			
 Spacers	Bartlett, Scott	Scott Bartlett	Spacers	1	September 22, 2019				
@@ -44,19 +44,19 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
  (2) example with approximate author match, preserving OLD author (-o or --oldapproxmatch)
  
 Title	Author	Author (f,m,l)	Series	Num	DateAcq	FAV	Rating	re-check	
-The Heisenberg Corollary: Book One of The Slagmaster Cycles	Duryea, C. H.	C. H. Duryea	Slagmaster Cycles	1	October 8, 2020				
-Ancestral Night (White Space Book 1)	Bear, Elizabeth	Elizabeth Bear	White Space	1	March 8, 2019				
-SODIUM:1 Harbinger	Arseneault, Stephen	Stephen Arseneault			January 31, 2014				
-Spacers: Free Space	Bartlett, Scott	Scott Bartlett	Spacers	2	September 22, 2019				
-The Time Bubble Box Set: Books 1-5: A thrilling series of time travel adventures	Ayres, Jason	Jason Ayres			November 24, 2019				
-Karen Memory	Bear, Elizabeth	Elizabeth Bear			March 8, 2019			x	
-Spacers	Bartlett, Scott	Scott Bartlett	Spacers	1	September 15, 2019				
-Six Bits	Dahners, Laurence	Laurence Dahners			October 8, 2020				
-The Quantum Thief (Jean le Flambeur Book 1)	Rajaniemi, Hannu	Hannu Rajaniemi	Jean le Flambeur	1	October 8, 2020				
-Midshipman Henry Gallant in Space (The Henry Gallant Saga Book 1)	Alesso, H. Peter	H. Peter Alesso	Henry Gallant Saga	1	June 3, 2020				
-Nightfall: A Novel	Asimov, Isaac	Isaac Asimov			November 17, 2019				
-A Little Hatred (The Age of Madness Book 1)	Abercrombie, Joe	Joe Abercrombie	Age of Madness	1	September 16, 2019	FAV			
-Best Served Cold (First Law Standalones)	Abercrombie, Joe	Joe Abercrombie			March 17, 2020	FAV			
+The Heisenberg Corollary: Book One of The Slagmaster Cycles	Duryea, C. H.	C. H. Duryea	Slagmaster Cycles	1		October 8, 2020				
+Ancestral Night (White Space Book 1)	Bear, Elizabeth	Elizabeth Bear	White Space	1	READ	March 8, 2019				
+SODIUM:1 Harbinger	Arseneault, Stephen	Stephen Arseneault				January 31, 2014				
+Spacers: Free Space	Bartlett, Scott	Scott Bartlett	Spacers	2		September 22, 2019				
+The Time Bubble Box Set: Books 1-5: A thrilling series of time travel adventures	Ayres, Jason	Jason Ayres				November 24, 2019				
+Karen Memory	Bear, Elizabeth	Elizabeth Bear			READ	March 8, 2019			x	
+Spacers	Bartlett, Scott	Scott Bartlett	Spacers	1	READ	September 15, 2019				
+Six Bits	Dahners, Laurence	Laurence Dahners				October 8, 2020				
+The Quantum Thief (Jean le Flambeur Book 1)	Rajaniemi, Hannu	Hannu Rajaniemi	Jean le Flambeur	1		October 8, 2020				
+Midshipman Henry Gallant in Space (The Henry Gallant Saga Book 1)	Alesso, H. Peter	H. Peter Alesso	Henry Gallant Saga	1	READ	June 3, 2020				
+Nightfall: A Novel	Asimov, Isaac	Isaac Asimov				November 17, 2019				
+A Little Hatred (The Age of Madness Book 1)	Abercrombie, Joe	Joe Abercrombie	Age of Madness	1	READ	September 16, 2019	FAV			
+Best Served Cold (First Law Standalones)	Abercrombie, Joe	Joe Abercrombie			READ	March 17, 2020	FAV			
 A Shadow in Summer: Book One of The Long Price Quartet	Abraham, Daniel	Daniel Abraham	Long Price Quartet	1	June 28, 2020				
 Sextant: A Young Man's Daring Sea Voyage and the Men Who Mapped the World's Oceans	Barrie, David	David Barrie			July 06, 2019	GOOD			
 
@@ -84,19 +84,19 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
  (3) example with approximate author match, preserving NEW author (-n or --newapproxmatch)
  
 Title	Author	Author (f,m,l)	Series	Num	DateAcq	FAV	Rating	re-check	
-The Heisenberg Corollary: Book One of The Slagmaster Cycles	Duryea, C. H.	C. H. Duryea	Slagmaster Cycles	1	October 8, 2020				
-Ancestral Night (White Space Book 1)	Bear, Elizabeth	Elizabeth Bear	White Space	1	March 8, 2019				
-SODIUM:1 Harbinger	Arseneault, Stephen	Stephen Arseneault			January 31, 2014				
-Spacers: Free Space	Bartlett, Scott	Scott Bartlett	Spacers	2	September 22, 2019				
-The Time Bubble Box Set: Books 1-5: A thrilling series of time travel adventures	Ayres, Jason	Jason Ayres			November 24, 2019				
-Karen Memory	Bear, Elizabeth	Elizabeth Bear			March 8, 2019			x	
-Spacers	Bartlett, Scott T.	Scott T. Bartlett	Spacers	1	September 15, 2019				
-Six Bits	Dahners, Laurence	Laurence Dahners			October 8, 2020				
-The Quantum Thief (Jean le Flambeur Book 1)	Rajaniemi, Hannu	Hannu Rajaniemi	Jean le Flambeur	1	October 8, 2020				
-Midshipman Henry Gallant in Space (The Henry Gallant Saga Book 1)	Alesso, H. Peter	H. Peter Alesso	Henry Gallant Saga	1	June 3, 2020				
-Nightfall: A Novel	Asimov, Isaac	Isaac Asimov			November 17, 2019				
-A Little Hatred (The Age of Madness Book 1)	Abercrombie, Joe	Joe Abercrombie	Age of Madness	1	September 16, 2019	FAV			
-Best Served Cold (First Law Standalones)	Abercrombie, Joe	Joe Abercrombie			March 17, 2020	FAV			
+The Heisenberg Corollary: Book One of The Slagmaster Cycles	Duryea, C. H.	C. H. Duryea	Slagmaster Cycles	1		October 8, 2020				
+Ancestral Night (White Space Book 1)	Bear, Elizabeth	Elizabeth Bear	White Space	1	READ	March 8, 2019				
+SODIUM:1 Harbinger	Arseneault, Stephen	Stephen Arseneault				January 31, 2014				
+Spacers: Free Space	Bartlett, Scott	Scott Bartlett	Spacers	2		September 22, 2019				
+The Time Bubble Box Set: Books 1-5: A thrilling series of time travel adventures	Ayres, Jason	Jason Ayres				November 24, 2019				
+Karen Memory	Bear, Elizabeth	Elizabeth Bear			READ	March 8, 2019			x	
+Spacers	Bartlett, Scott T.	Scott T. Bartlett	Spacers	1	READ	September 15, 2019				
+Six Bits	Dahners, Laurence	Laurence Dahners				October 8, 2020				
+The Quantum Thief (Jean le Flambeur Book 1)	Rajaniemi, Hannu	Hannu Rajaniemi	Jean le Flambeur	1		October 8, 2020				
+Midshipman Henry Gallant in Space (The Henry Gallant Saga Book 1)	Alesso, H. Peter	H. Peter Alesso	Henry Gallant Saga	1	READ	June 3, 2020				
+Nightfall: A Novel	Asimov, Isaac	Isaac Asimov				November 17, 2019				
+A Little Hatred (The Age of Madness Book 1)	Abercrombie, Joe	Joe Abercrombie	Age of Madness	1	READ	September 16, 2019	FAV			
+Best Served Cold (First Law Standalones)	Abercrombie, Joe	Joe Abercrombie			READ	March 17, 2020	FAV			
 A Shadow in Summer: Book One of The Long Price Quartet	Abraham, Daniel	Daniel Abraham	Long Price Quartet	1	June 28, 2020				
 Sextant: A Young Man's Daring Sea Voyage and the Men Who Mapped the World's Oceans	Barrie, David	David Barrie			July 06, 2019	GOOD			
 
