@@ -36,6 +36,9 @@ MONTHS = ["January", "February", "March", "April", "May", "June", "July", "Augus
 # [lcstring, series, seriesNum
 TITLE_totalMatch = []
 TITLE_partialMatch = []
+SUBSTITUTE_goofy = []
+# do this substitution in 'Title', 'Author', 'Author (f,m,l)'
+doSubstituteGoofy = ['Title', 'Author', 'Author (f,m,l)']
 
 ###################################################################################
 # doReadPreviousRatings()
@@ -77,7 +80,17 @@ def doReadPreviousRatings(prevRatingsFname):
         TITLE_partialMatch.append(tmp)
     del df
 
-    # get the previous list of books with its ratings
+    # get goofy character substitution list - do this substitution in 'Title', 'Author', 'Author (f,m,l)'
+    sheet = "SUBSTITUTE_goofy"
+    df = xlsPd.parse(sheet, header=0)
+    for i, row in df.iterrows():
+        if pd.isna(row['a']):
+            break
+        tmp = [row['a'], row['b']]
+        SUBSTITUTE_goofy.append(tmp)
+    del df
+
+    # get the previous list of books with its ratings; do the goofy
     sheet = "Books"
     df = xlsPd.parse(sheet, header=0)
     # since the file exists, enter the "extra" headers; we merge this old data into the new list
@@ -95,6 +108,9 @@ def doReadPreviousRatings(prevRatingsFname):
                 tmp[hdr] = ""
             else:
                 tmp[hdr] = row[hdr]
+                if hdr in doSubstituteGoofy:
+                    for goofy in SUBSTITUTE_goofy:
+                        tmp[hdr] = row[hdr].replace(goofy[0], goofy[1])
         theKey = row['Title']+"\t"+row['Author']
         if theKey in prevRatings:
             errmsg = "$$$ERROR$$$ %s found more than once in %s tab Books\n" % (theKey, prevRatingsFname)
@@ -121,6 +137,10 @@ def doProcessTitle(theLine):
     title = theLine
     series = ""
     seriesNum = ""
+
+    # first translate goofy characters
+    for goofy in SUBSTITUTE_goofy:
+        title = title.replace(goofy[0], goofy[1])
 
     # Now this is a bit of a stretch: try to find the series and series number in title if possible
     # First handle special cases from the prevRatingsFname spreadsheet tabs
@@ -198,6 +218,10 @@ def doProcessAuthor(theLine):
     #    it is strangely concatenated with the date; remove the date
     author = theLine
     dateAcquired = ""
+
+    # first translate goofy characters
+    for goofy in SUBSTITUTE_goofy:
+        author = author.replace(goofy[0], goofy[1])
 
     for month in MONTHS:
         tmp = author.rfind(month)
