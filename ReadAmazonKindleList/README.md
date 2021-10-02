@@ -13,6 +13,7 @@ ReadAmazonKindleList - start of routine to read Amazon Kindle list copied from w
   - Books                - previous version of our output spreadsheet
   - TITLE_totalMatch     - if this matches total title then use series and seriesNum
   - TITLE_partialMatch   - if this matches any part of title then use series and seriesNum
+  - SUBSTITUTE_goofy - a list of goofy characters from UTF or Windows and what to replace them with
 - Example: `python ReadAmazonKindleList.py exampleKindleList.txt example_KindleBooks_Favorites.xlsx`
 - To check proper operation including switches, do `source testit.sh` in a GIT Bash or Linux environment. It does a "diff" at the end; if no further output then it matches.
   - `$ source testit.sh`
