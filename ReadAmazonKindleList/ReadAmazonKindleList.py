@@ -441,6 +441,7 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
     theLine = fptr.readline()
     while 0 != len(theLine):
         theLine = theLine.strip()
+        # sys.stderr.write("%s\n" % theLine)
         if 0 == len(theLine): # end of text block
             sawBlank = 0
             series = ""
@@ -503,7 +504,7 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
     #    first add them to the normal output above so we don't lose them
     #    then notify user
     # copy books to end of output that were not found in listFname but found in prevRatingsFname
-    for theKey in prevBooks:
+    for theKey in prevBooks.keys():
         if 1 == prevBooks[theKey]:
             for col in allHdrs:
                 if "Num" == col:
@@ -521,7 +522,15 @@ def doReadAmazonKindleList(listFname, prevRatingsFname, approxMatchKeepAuthor):
                     else:
                         sys.stdout.write("%s\t" % prevRatings[theKey][col])
                 else:
-                    sys.stdout.write("%s\t" % prevRatings[theKey][col])
+                    try:
+                        sys.stdout.write("%s\t" % prevRatings[theKey][col])
+                    except:
+                        sys.stderr.write("\nERROR on col |%s|\n" % (col))
+                        sys.stderr.flush()
+                        sys.stderr.write("%s\n" % prevRatings[theKey])
+                        sys.stderr.flush()
+                        # sys.stderr.write("\nERROR on key |%s|\n" % (theKey))
+                        # sys.stderr.write("%s\n" % prevRatings[theKey])
             sys.stdout.write("\n")
 
     # notify user if any books were in prevRatingsFname but not in listFname
