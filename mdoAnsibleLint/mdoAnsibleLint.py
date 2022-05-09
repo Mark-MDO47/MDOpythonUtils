@@ -4,8 +4,8 @@
 #
 # Reads one named Ansible YAML file and does crude check.
 #
-import sys
-import os
+# import sys
+# import os
 import yaml
 import argparse
 

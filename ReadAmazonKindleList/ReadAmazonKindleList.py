@@ -29,11 +29,11 @@
 #    flags --oldapproxmatch and --newapproxmatch are one way to help deal with it
 
 import sys
-import string
+# import string
 import os
 import argparse
 import pandas as pd
-import datetime
+# import datetime
 
 MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
@@ -80,7 +80,7 @@ def doReadPreviousRatings(prevRatingsFname):
     # Import the excel file
     sys.stderr.write("opening %s\n" % os.path.abspath(prevRatingsFname))
     xlsPd = pd.ExcelFile(prevRatingsFname)
-    xlsSheets = xlsPd.sheet_names
+    # xlsSheets = xlsPd.sheet_names
 
     # get special cases for a total title match - make them all lower case
     sheet = "TITLE_totalMatch"
@@ -243,7 +243,6 @@ def doProcessAuthor(theLine, title):
     # second important line after dots is the author BUT...
     #    it is strangely concatenated with the date; remove the date
     author = theLine
-    dateAcquired = ""
 
     # first translate goofy characters
     for goofy in SUBSTITUTE_goofy:
