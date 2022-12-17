@@ -572,12 +572,12 @@ python ReadAmazonKindleList.py list.txt prevRatings.xlsx  > formattedList.txt
         usage='%(prog)s listFname prevRatingsFname')
     my_parser.add_argument('listFname',type=str,help='path to listFname text file, copied from Kindle book list')
     my_parser.add_argument('prevRatingsFname',type=str,help='path to previous ratings *.xlsx spreadsheet')
-    my_group = my_parser.add_mutually_exclusive_group(required=False)
-    my_parser.add_argument('-n',
+    me_group = my_parser.add_mutually_exclusive_group(required=False)
+    me_group.add_argument('-n',
                            '--newapproxmatch',
                            action='store_true',
                            help='accepts approx matches in the two input files and preserves new Author; default is exact matches')
-    my_parser.add_argument('-o',
+    me_group.add_argument('-o',
                            '--oldapproxmatch',
                            action='store_true',
                            help='accepts approx matches in the two input files and preserves old Author; default is exact matches')
