@@ -207,7 +207,7 @@ def get_exif_date_str(fname):
     if "DateTimeOriginal" in labeled.keys():
         orgDate = labeled["DateTimeOriginal"]
     return orgDate
-    #end get_exif_date_str()
+    # end get_exif_date_str()
 
 ###################################################################################
 # my_touch - change file access and modified time
@@ -273,7 +273,7 @@ def my_touch(fname, stamp):
     a_changeTime = time.mktime(a_date.timetuple())
     
     os.utime(fname, (a_changeTime, a_changeTime)) # access time, modified time
-    #end my_touch
+    # end my_touch
 
 ###################################################################################
 # do_rename_reorder - create the *.sh to do rename and reorder
@@ -388,7 +388,7 @@ def get_the_lines(dir_of_interest):
 
     # TODO FIXME now get the dates from the metadata
     # set all associated pix files to same date
-    #end get_the_lines()
+    # end get_the_lines()
 
 ###################################################################################
 # "__main__" processing for RenameReorder
