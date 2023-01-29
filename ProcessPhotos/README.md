@@ -1,4 +1,4 @@
-# Process Photos - order Google Photos downloads by date/time
+# Process Photos - sort Google Photos downloads by date/time
 
 ## RenameReorder.py
 
