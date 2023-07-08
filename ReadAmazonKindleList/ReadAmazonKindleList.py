@@ -85,7 +85,7 @@ def doReadPreviousRatings(prevRatingsFname):
     # get special cases for a total title match - make them all lower case
     sheet = "TITLE_totalMatch"
     df = xlsPd.parse(sheet, header=0)
-    for i, row in df.iterrows():
+    for row in df.iterrows():
         if pd.isna(row['a']):
             break
         tmp = [row['a'].lower(), row['b'], row['c']]
@@ -168,7 +168,7 @@ def doProcessTitle(theLine):
 
     # Now this is a bit of a stretch: try to find the series and series number in title if possible
     # First handle special cases from the prevRatingsFname spreadsheet tabs
-    foundSeries = False;
+    foundSeries = False
     title_lower = title.lower()
     for totMatch in TITLE_totalMatch:
         if totMatch[0] == title_lower:
@@ -299,7 +299,7 @@ def doProcessDateAcquired(theLine, title):
 #
 # Inputs:
 #    theKey - key (title\tauthor) for exact match
-#    prevBooks - 
+#    prevBooks -
 #
 # return approxGood, theKey
 #    approxGood - true if (not exact match) and (approximate match)
@@ -312,7 +312,7 @@ def checkApproxMatch(theKey, prevBooks):
     splitTheKey = theKey.split("\t")
     title = splitTheKey[0]
     author = splitTheKey[1]
-    
+
     if theKey not in prevBooks:
         # approx = exact title match and approx match in author
         authorSplit = author.replace(",", "").split(" ")
