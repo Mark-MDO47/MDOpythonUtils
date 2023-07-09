@@ -85,7 +85,7 @@ def doReadPreviousRatings(prevRatingsFname):
     # get special cases for a total title match - make them all lower case
     sheet = "TITLE_totalMatch"
     df = xlsPd.parse(sheet, header=0)
-    for row in df.iterrows():
+    for i, row in df.iterrows():
         if pd.isna(row['a']):
             break
         tmp = [row['a'].lower(), row['b'], row['c']]
