@@ -13,16 +13,19 @@ import re as re
 import argparse
 
 C_PREPROC_DIRECTIVES = [
-    "#include",
-    "#define",
-    "#undef",
-    "#if",
-    "#ifdef",
-    "#ifndef",
-    "#else",
-    "#endif",
-    "#error",
-    "#pragma"
+        "#include ",
+        "#pragma ",
+        "#define ",
+        "#undef ",
+        "#error ",
+        "#warning ",
+        "#if ",
+        "#else ",
+        "#elif ",
+        "#endif ",
+        "#ifdef ",
+        "#ifndef ",
+        "#line "
     ]
 
 
@@ -45,7 +48,9 @@ def false_if_preproc(a_line):
 #
 #
 def do_create_md_TOC(fname):
-    re_ptrn = re.compile('^#[#]*')
+    re_ptrn = re.compile('^#[#]* ')
+    # re_skip_bgn = re.compile('^```[Cc]')
+    # re_skip_end = re.compile('^```')
     found_top = False
 
     sys.stdout.write("**Table Of Contents**\n")
