@@ -48,14 +48,16 @@ def false_if_preproc(a_line):
 ###################################################################################
 # do_create_md_TOC - do the work
 #
+# We will print to stdout just the generated TOC
+# If original file had a TOC, we will re-write original file with new TOC
 #
 def do_create_md_TOC(fname):
     re_ptrn = re.compile('^#[#]* ')
-    found_top = False
-    found_toc = -1
-    save_lines = []
-    toc_lines = []
-    line_end = "" # will use line end we find in file
+    found_top = False # first header found will be called top
+    found_toc = -1  # only replace TOC if we found one in original file
+    save_lines = [] # all lines from original file
+    toc_lines = []  # our new TOC lines
+    line_end = ""   # will use line end we find in file
 
     toc_lines.append("**Table Of Contents**")
     sys.stdout.write(toc_lines[0]+"\n")
