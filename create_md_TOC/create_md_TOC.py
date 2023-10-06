@@ -52,31 +52,44 @@ def do_create_md_TOC(fname):
     # re_skip_bgn = re.compile('^```[Cc]')
     # re_skip_end = re.compile('^```')
     found_top = False
+    found_toc = False
+    save_lines = []
+    toc_lines = []
 
-    sys.stdout.write("**Table Of Contents**\n")
+    toc_lines.append("**Table Of Contents**")
+    sys.stdout.write(toc_lines[0]+"\n")
     fobj = open(fname, 'r')
     a_line = fobj.readline()
     while 0 != len(a_line):
+        save_lines.append(a_line)
         a_line = a_line.rstrip()
-        if false_if_preproc(a_line):
-            re_match = re_ptrn.match(a_line)
-            if re_match:
-                re_end = re_match.span()[1]
-                a_line = a_line[re_end:].lstrip()
-                a_unmod = a_line
-                a_line = a_line.lower()
-                a_line = a_line.replace("-", r"\-")
-                a_line = a_line.replace(" ", "-")
-                if found_top:
-                    re_end = max(2,re_end)
-                    for i in range(re_end-2): # one less to match top
-                        sys.stdout.write("  ")
-                else:
-                    found_top = True
-                    a_unmod = "Top"
-                sys.stdout.write("* [%s](#%s \"%s\")\n" % (a_unmod, a_line, a_unmod))
-
+        # if false_if_preproc(a_line):
+        if 0 == a_line.find(toc_lines[0][0:-1]):
+            endline = save_lines[-1][len(a_line)-len(save_lines[-1])]
+        re_match = re_ptrn.match(a_line)
+        if re_match:
+            re_end = re_match.span()[1]
+            a_line = a_line[re_end:].lstrip()
+            a_unmod = a_line
+            a_line = a_line.lower()
+            a_line = a_line.replace("-", r"\-")
+            a_line = a_line.replace(" ", "-")
+            pre_line = ""
+            if found_top:
+                re_end = max(2,re_end)
+                for i in range(re_end-2): # one less to match top
+                    pre_line += "  "
+            else:
+                found_top = True
+                a_unmod = "Top"
+            toc_lines.append("%s* [%s](#%s \"%s\")" % (pre_line, a_unmod, a_line, a_unmod))
+            sys.stdout.write(toc_lines[-1] +"\n")
         a_line = fobj.readline()
+    fobj.close()
+
+    # fobj = open(fname+".txt", 'w')
+
+
     # end do_create_md_TOC()
 
 ###################################################################################
