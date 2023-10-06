@@ -12,6 +12,7 @@ import re as re
 # import os
 import argparse
 
+"""
 C_PREPROC_DIRECTIVES = [
         "#include ",
         "#pragma ",
@@ -42,6 +43,7 @@ def false_if_preproc(a_line):
             break
     return found
     # end false_if_preproc()
+"""
 
 ###################################################################################
 # do_create_md_TOC - do the work
@@ -49,12 +51,11 @@ def false_if_preproc(a_line):
 #
 def do_create_md_TOC(fname):
     re_ptrn = re.compile('^#[#]* ')
-    # re_skip_bgn = re.compile('^```[Cc]')
-    # re_skip_end = re.compile('^```')
     found_top = False
-    found_toc = False
+    found_toc = -1
     save_lines = []
     toc_lines = []
+    line_end = "" # will use line end we find in file
 
     toc_lines.append("**Table Of Contents**")
     sys.stdout.write(toc_lines[0]+"\n")
@@ -65,10 +66,11 @@ def do_create_md_TOC(fname):
         a_line = a_line.rstrip()
         # if false_if_preproc(a_line):
         if 0 == a_line.find(toc_lines[0][0:-1]):
-            endline = save_lines[-1][len(a_line)-len(save_lines[-1])]
+            line_end = save_lines[-1][len(a_line)-len(save_lines[-1])]
+            found_toc = len(save_lines)-1
         re_match = re_ptrn.match(a_line)
         if re_match:
-            re_end = re_match.span()[1]
+            re_end = re_match.span()[1]-1
             a_line = a_line[re_end:].lstrip()
             a_unmod = a_line
             a_line = a_line.lower()
@@ -87,8 +89,22 @@ def do_create_md_TOC(fname):
         a_line = fobj.readline()
     fobj.close()
 
-    # fobj = open(fname+".txt", 'w')
-
+    if 0 != len(line_end): # if we found the TOC in the file
+        fobj = open(fname, 'w')
+        for i in range(found_toc):
+            fobj.write("%s" % save_lines[i])
+        for i in range(found_toc, len(save_lines)):
+            if len(line_end) == len(save_lines[i]):
+                found_toc = i
+                break
+        # print("%d: %s" % (found_toc, save_lines[found_toc]))
+        for a_line in toc_lines:
+            fobj.write("%s%s" % (a_line,line_end))
+        for i in range(found_toc, len(save_lines)):
+            fobj.write("%s" % save_lines[i])
+        fobj.close()
+    else:
+        sys.stderr.write("\nERROR - TOC not found in %s; no file written\n\n" % fname)
 
     # end do_create_md_TOC()
 
