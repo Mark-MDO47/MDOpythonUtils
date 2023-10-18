@@ -58,8 +58,9 @@ def do_create_md_TOC(fname):
     save_lines = [] # all lines from original file
     toc_lines = []  # our new TOC lines
     line_end = ""   # will use line end we find in file
+    toc_string = "**Table Of Contents**"
 
-    toc_lines.append("**Table Of Contents**")
+    toc_lines.append(toc_string)
     sys.stdout.write(toc_lines[0]+"\n")
     fobj = open(fname, 'r')
     a_line = fobj.readline()
@@ -67,16 +68,18 @@ def do_create_md_TOC(fname):
         save_lines.append(a_line)
         a_line = a_line.rstrip()
         # if false_if_preproc(a_line):
-        if 0 == a_line.find(toc_lines[0][0:-1]):
-            line_end = save_lines[-1][len(a_line)-len(save_lines[-1])]
+        if 0 == a_line.lower().find(toc_string.lower()):
+            line_end = save_lines[-1][len(a_line)-len(save_lines[-1]):]
             found_toc = len(save_lines)-1
         re_match = re_ptrn.match(a_line)
         if re_match:
             re_end = re_match.span()[1]-1
             a_line = a_line[re_end:].lstrip()
             a_unmod = a_line
+            # the hashtag line has restrictions - only special character we know is "-"
             a_line = a_line.lower()
             a_line = a_line.replace("-", r"\-")
+            a_line = a_line.replace("?", "") # just remove '?'
             a_line = a_line.replace(" ", "-")
             pre_line = ""
             if found_top:
