@@ -79,8 +79,12 @@ def do_create_md_TOC(fname):
             # the hashtag line has restrictions - only special character we know is "-"
             a_line = a_line.lower()
             a_line = a_line.replace("-", r"\-")
-            a_line = a_line.replace("?", "") # just remove '?'
             a_line = a_line.replace(" ", "-")
+            a_line = a_line.replace("?", "") # just remove '?'
+            a_line = a_line.replace("!", "") # just remove '!'
+            a_line = a_line.replace(":", "") # just remove ':'
+            a_line = a_line.replace("/", "") # just remove '/'
+            a_line = a_line.replace(".", "") # just remove '.'
             pre_line = ""
             if found_top:
                 re_end = max(2,re_end)
@@ -122,7 +126,7 @@ def do_create_md_TOC(fname):
 if __name__ == "__main__":
     my_parser = argparse.ArgumentParser(prog='create_md_TOC',
         formatter_class=argparse.RawTextHelpFormatter,
-        description="reads a MarkDown (*.md) file and writes to stdout a table of contents",
+        description="reads a MarkDown (*.md) file and re-writes file and writes TOC lines to stdout a table of contents",
         epilog="""Example:
 python create_md_TOC.py REAME.md > TOC_suggestions.txt
 """,
