@@ -128,7 +128,7 @@ if __name__ == "__main__":
         formatter_class=argparse.RawTextHelpFormatter,
         description="reads a MarkDown (*.md) file and re-writes file and writes TOC lines to stdout a table of contents",
         epilog="""Example:
-python create_md_TOC.py REAME.md > TOC_suggestions.txt
+python create_md_TOC.py README.md > TOC_suggestions.txt
 """,
         usage='%(prog)s fname')
     my_parser.add_argument('fname',type=str,help='path to MarkDown text file')
