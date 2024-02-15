@@ -15,7 +15,7 @@
 - reads the input file and inserts table of contents at marker "\*\*Table Of Contents\*\*"
 - gotchas: handles several special characters (-?!:/.) but not all
 
-## xlsx2txt - create text form of values in \*.xls or \*.xlsx; allows quick comparison of files
+## xlsx2txt - create text form of values in .xls or .xlsx - allows quick comparison of files
 - example: `python xlsx2txt.py file.xlsx > file.txt`
 - reads the **values** from tabs/cells in file.xlsx (not formulas, formatting, etc.)
 - writes tab-separated-variable version to stdout in form `tabname\tA1\tA2\t...`
