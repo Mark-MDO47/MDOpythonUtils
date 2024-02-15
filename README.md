@@ -1,5 +1,12 @@
 # MDOpythonUtils
-some short general purpose Python 3.x utilities
+**Some short general purpose Python 3.x utilities**
+
+**Table Of Contents**
+
+## create_md_TOC - read GitHub-style MarkDown and insert Table of Contents
+- example: python create_md_TOC.py README.md
+- reads the input file and inserts table of contents at marker "\*\*Table Of Contents\*\*"
+- gotchas: handles several special characters (-?!:/.) but not all
 
 ## xlsx2txt - create text form of values in \*.xls or \*.xlsx; allows quick comparison of files
 - example: `python xlsx2txt.py file.xlsx > file.txt`
@@ -52,3 +59,9 @@ some short general purpose Python 3.x utilities
   - `opening D:\...\exampleKindleList.txt`
   - `opening D:\...\example_KindleBooks_Favorites.xlsx`
   - `opening D:\...\exampleKindleList.txt`
+
+## ProcessPhotos - sort Google Photos downloads by date/time
+- tools to sort photos downloads
+  - stdout receives bash shell script to set filedates and filename
+- tools to convert heic to jpeg
+- gotchas: has not been extensively tested
