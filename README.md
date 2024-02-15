@@ -34,7 +34,7 @@
 - writes lines uniq between those two to stdout
 - useful for keeping line numbers but otherwise performing uniq
 
-## mdoAnsibleLint - start of a simple "lint" for Ansible YAML files
+## mdoAnsibleLint - start of a simple lint for Ansible YAML files
 - inspiration came from spending all day looking for a missing ":"
   - ansible-playbook, ansible-lint and yamllint were not leading me to the culprit
 - example: `python mdoAnsibleLint.py test.yml`
