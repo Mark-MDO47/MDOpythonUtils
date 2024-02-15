@@ -6,7 +6,7 @@
 * [create_md_TOC - read GitHub-style MarkDown and insert Table of Contents](#create_md_toc-\--read-github\-style-markdown-and-insert-table-of-contents "create_md_TOC - read GitHub-style MarkDown and insert Table of Contents")
 * [xlsx2txt - create text form of values in \*.xls or \*.xlsx; allows quick comparison of files](#xlsx2txt-\--create-text-form-of-values-in-\*xls-or-\*xlsx;-allows-quick-comparison-of-files "xlsx2txt - create text form of values in \*.xls or \*.xlsx; allows quick comparison of files")
 * [mdoUniq - uniq for part of the line](#mdouniq-\--uniq-for-part-of-the-line "mdoUniq - uniq for part of the line")
-* [mdoAnsibleLint - start of a simple "lint" for Ansible YAML files](#mdoansiblelint-\--start-of-a-simple-"lint"-for-ansible-yaml-files "mdoAnsibleLint - start of a simple "lint" for Ansible YAML files")
+* [mdoAnsibleLint - start of a simple "lint" for Ansible YAML files](#mdoansiblelint-\--start-of-a-simple-lint-for-ansible-yaml-files "mdoAnsibleLint - start of a simple "lint" for Ansible YAML files")
 * [ReadAmazonKindleList - Read Amazon Kindle list copied from website and make a spreadsheet](#readamazonkindlelist-\--read-amazon-kindle-list-copied-from-website-and-make-a-spreadsheet "ReadAmazonKindleList - Read Amazon Kindle list copied from website and make a spreadsheet")
 * [ProcessPhotos - sort Google Photos downloads by date/time](#processphotos-\--sort-google-photos-downloads-by-datetime "ProcessPhotos - sort Google Photos downloads by date/time")
 
