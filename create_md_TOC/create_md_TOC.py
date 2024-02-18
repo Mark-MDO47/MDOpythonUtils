@@ -66,7 +66,6 @@ def do_create_md_TOC(fname):
     a_line = fobj.readline()
     while 0 != len(a_line):
         save_lines.append(a_line)
-        a_line = a_line.rstrip()
         # if false_if_preproc(a_line):
         if 0 == a_line.lower().find(toc_string.lower()):
             line_end = save_lines[-1][len(a_line)-len(save_lines[-1]):]
@@ -76,7 +75,7 @@ def do_create_md_TOC(fname):
             re_end = re_match.span()[1]-1
             a_line = a_line[re_end:].lstrip()
             a_unmod = a_line
-            # the hashtag line has restrictions - only special character we know is "-"
+            # the hashtag line has restrictions; most special characters just get removed and blanks to "-"
             a_line = a_line.lower()
             a_line = a_line.replace("-", r"\-")
             a_line = a_line.replace(" ", "-")
