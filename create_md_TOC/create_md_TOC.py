@@ -66,6 +66,7 @@ def do_create_md_TOC(fname):
     a_line = fobj.readline()
     while 0 != len(a_line):
         save_lines.append(a_line)
+        a_line = a_line.rstrip()
         # if false_if_preproc(a_line):
         if 0 == a_line.lower().find(toc_string.lower()):
             line_end = save_lines[-1][len(a_line)-len(save_lines[-1]):]
