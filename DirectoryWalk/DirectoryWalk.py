@@ -1,14 +1,30 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Jul  1 22:50:12 2024
+DirectoryWalk - traverses and compares two directory trees
+   (Windows only at this time)
 
-@author: mdo
+usage: DirectoryWalk dirname other
+
+Traverses parallel directories, flagging differences
+
+positional arguments:
+  dirname             path to root directory to compare
+  other               Drive letter to other directory to compare
+
+options:
+  -h, --help          show this help message and exit
+
+mutually exclusive options:
+  -ci, --ignore       do not compare files found in both directories (just flag missing files)
+  -cs, --sha256       compare files found in both directories using SHA256; default is SHA256 comparison
+  -cl, --length_date  FUTURE-FEATURE compare files found in both directories using file-length and modify-date-time
+
+Example:
+python DirectoryWalk.py "D:\path-to-my\StuffAndInterests" X > DirectoryCompareInfo.txt
+
+@author: https://github.com/Mark-MDO47
 
 """
-
-# Python program to list out 
-# all the sub-directories and files 
-
 
 import os
 import sys
@@ -22,21 +38,21 @@ DEFAULT_X = r"X:\OlsonMedia\StuffAndInterests"
 
 # these to not process certain directories/files
 # regular expressions are just too tweaky
-Trunc_Dirs_Calc = {':\OlsonMedia\StuffAndInterests\Quant': 1}
+Trunc_Dirs_Calc = {r':\OlsonMedia\StuffAndInterests\Quant': 1}
 Skip_Dirs = {"AtEnd": [".AppleDouble", ".git", ".svn"], "AtStart": [], "All": []}
 Skip_Dirs_Len = {"AtEnd": [], "AtStart": [], "All": []}
 Skip_Files = {"AtEnd": [".bak", ".ipynb", ".lnk"], "AtStart": ["~"], "All": ["Thumbs.db", ".DS_Store"]}
 Skip_Files_Len = {"AtEnd": [], "AtStart": [], "All": []}
 
 # only calculate lengths one time
-for a_key in Skip_Dirs.keys():
-    a_list = Skip_Dirs[a_key]
-    for an_entry in a_list:
-        Skip_Dirs_Len[a_key].append(len(an_entry))
-for a_key in Skip_Files.keys():
-    a_list = Skip_Files[a_key]
-    for an_entry in a_list:
-        Skip_Files_Len[a_key].append(len(an_entry))
+for gbl_a_key in Skip_Dirs.keys():
+    gbl_a_list = Skip_Dirs[gbl_a_key]
+    for an_entry in gbl_a_list:
+        Skip_Dirs_Len[gbl_a_key].append(len(an_entry))
+for gbl_a_key in Skip_Files.keys():
+    gbl_a_list = Skip_Files[gbl_a_key]
+    for an_entry in gbl_a_list:
+        Skip_Files_Len[gbl_a_key].append(len(an_entry))
 
 
 # List to store all directories files
@@ -89,7 +105,7 @@ def MatchName(name_to_check, skip_list, skip_list_len):
                     break
             else:
                 sys.stderr.write("ERROR MatchName found illegal key %s\n" % a_key)
-                exit(1)
+                sys.exit(1)
         if True == the_match:
             break
     return the_match
@@ -136,7 +152,7 @@ def Print_With_Title(title_string, string_to_print):
     if title_string:
         print("\n%s" % title_string)
         title_string = False
-    print("%s" % title_string)
+    print("%s" % string_to_print)
     return title_string
     # end Print_With_Title()
 
@@ -153,23 +169,23 @@ def CompareFileLists_OneSided(do_compare, root, char_1, char_2, files_1, files_2
                 if ("UNKNOWN" != sha256_str1) and ("UNKNOWN" != sha256_str2):
                     # normal case - SHA256 worked
                     if sha256_str1 != sha256_str2:
-                        Print_With_Title(title_string, "  %s %s SHA not match %s" % (char_1, a_file_1, char_2))
+                        title_string = Print_With_Title(title_string, "  %s %s SHA not match %s" % (char_1, a_file_1, char_2))
                 else:
                     # SHA256 error - maybe one of the drives got unmounted due to WiFi?
                     if "UNKNOWN" == sha256_str1:
-                        Print_With_Title(title_string, "  SHA ERROR calculating SHA256 on %s %s" % (char_1, a_file_1))
+                        title_string = Print_With_Title(title_string, "  SHA ERROR calculating SHA256 on %s %s" % (char_1, a_file_1))
                     if "UNKNOWN" == sha256_str2:
-                        Print_With_Title(title_string, "  SHA ERROR calculating SHA256 on %s %s" % (char_2, a_file_1))
+                        title_string = Print_With_Title(title_string, "  SHA ERROR calculating SHA256 on %s %s" % (char_2, a_file_1))
             elif "LENGTH_DATE" == do_compare:
                 pass # FIXME TODO MDOMDO LENGTH/DATE compare
             elif "IGNORE" == do_compare:
                 pass # Second call; don't do calculation two times
             else:
-                sys.stderr.write("CompareFile do_compare not SHA not LEN_DATE but %s" % do_compare)
+                sys.stderr.write("CompareFile do_compare not SHA not LEN_DATE but %s\n" % do_compare)
                 return
         else:
             # file in side 1 but not 2
-            Print_With_Title(title_string, "  file %s %s not in %s" % (char_1, a_file_1, char_2))
+            title_string = Print_With_Title(title_string, "  file %s %s not in %s" % (char_1, a_file_1, char_2))
     # end CompareFileLists_OneSided()
 
 ###################################################################################
@@ -179,6 +195,7 @@ def CompareFileLists(compare_type, root, char_1, char_2, files_1, files_2):
     # above already does requested compare of files found in both directories
     #   don't waste time by doing it again
     CompareFileLists_OneSided("IGNORE", root, char_2, char_1, files_2, files_1)
+    # end CompareFileLists()
 
 
 ###################################################################################
@@ -200,8 +217,8 @@ def TraverseDirs(full_path_start_dir):
             truncate = True
         elif not truncate:
             files = TrimNames(files, Skip_Files, Skip_Files_Len)
-            # Adding the directory info to list 
-            L.append((root[1:], dirs, files)) 
+            # Adding the directory info to list
+            L.append((root[1:], dirs, files))
             Dir[root[1:]] = i
             i += 1
     return L, Dir
@@ -223,17 +240,21 @@ python DirectoryWalk.py "%s" X > DirectoryCompareInfo.txt
         usage='%(prog)s dirname other')
     my_parser.add_argument('dirname',type=str,help='path to root directory to compare')
     my_parser.add_argument('other',type=str,help='Drive letter to other directory to compare')
+    my_parser.add_argument('-v',
+                           '--verbose',
+                           action='store_true',
+                           help='print verbose information about starting conditions)')
     me_group = my_parser.add_mutually_exclusive_group(required=False)
     me_group.add_argument('-ci',
-                           '--ignore',
+                           '--c_ignore',
                            action='store_true',
                            help='do not compare files found in both directories (just flag missing files)')
     me_group.add_argument('-cs',
-                           '--sha256',
+                           '--c_sha256',
                            action='store_true',
                            help='compare files found in both directories using SHA256; default is SHA256 comparison')
     me_group.add_argument('-cl',
-                           '--length_date',
+                           '--c_length_date',
                            action='store_true',
                            help='FUTURE-FEATURE compare files found in both directories using file-length and modify-date-time')
 
@@ -241,49 +262,53 @@ python DirectoryWalk.py "%s" X > DirectoryCompareInfo.txt
 
     if (len(args.dirname) < 3) or (not args.dirname[0].isalpha) or (":" != args.dirname[1]):
         sys.stderr.write("ERROR dirname should start with drive letter and : not %s\n" % args.dirname[:2])
-        exit(1)
+        sys.exit(1)
     drive_letter_d = args.dirname[:1]
     drive_letter_x = args.other[:1]
     dirname_no_letter = args.dirname[1:]
 
-    compare_type = "SHA256" # default
-    if args.length_date:
-        compare_type = "LENGTH_DATE"
-    elif args.ignore:
-        compare_type = "IGNORE"
+    gbl_compare_type = "SHA256" # default
+    if args.c_length_date:
+        gbl_compare_type = "LENGTH_DATE"
+    elif args.c_ignore:
+        gbl_compare_type = "IGNORE"
+
+    if args.verbose:
+        print("Verbose print of DirectoryWalk starting conditions:")
+        print("   dirname=\"%s\" other=\"%s\"" % (args.dirname, args.other[:1]))
+        print("   file compare type = \"%s\"" % gbl_compare_type)
 
     print("\ngetting info about D: and X: directories")
     # Get info by traversing through D:
     L_d, Dir_d = TraverseDirs(drive_letter_d+dirname_no_letter)
-    
+
     # Get info by traversing through X:
     L_x, Dir_x = TraverseDirs(drive_letter_x+dirname_no_letter)
-    
+
     print("\nchecking for directories that exist in one but not the other...")
     # find (root) directories not in the other
     Dir_not_in_x = FindNotIn(Dir_d, Dir_x)
     Dir_not_in_d = FindNotIn(Dir_x, Dir_d)
-    
+
     need_print_x = "  Not in %s:\t$$$$$$$$$$$$$$$" % drive_letter_x
-    for a_dir in Dir_not_in_x: 
-        Print_With_Title(need_print_x, "    not in %s:\t%s%s" % (drive_letter_x, drive_letter_x, a_dir))
+    for gbl_a_dir in Dir_not_in_x:
+        need_print_x = Print_With_Title(need_print_x, "    not in %s:\t%s%s" % (drive_letter_x, drive_letter_x, gbl_a_dir))
     need_print_d = "  Not in %s:\t$$$$$$$$$$$$$$$" % drive_letter_d
-    for a_dir in Dir_not_in_d: 
-        Print_With_Title(need_print_d, "    not in %s:\t%s%s" % (drive_letter_d, drive_letter_d, a_dir))
+    for gbl_a_dir in Dir_not_in_d:
+        need_print_d = Print_With_Title(need_print_d, "    not in %s:\t%s%s" % (drive_letter_d, drive_letter_d, gbl_a_dir))
     if not (need_print_x or need_print_d):
         print("   All directories found in both D: and X:")
-    
+
     print("\nchecking files from matching directories")
     sorted_d_keys = sorted(Dir_d.keys())
     sorted_x_keys = sorted(Dir_x.keys())
-    
-    for idx, a_dir  in enumerate(sorted_x_keys):
-        if a_dir in Dir_x:
-            tuple_d = L_d[Dir_d[a_dir]]
-            tuple_x = L_x[Dir_x[a_dir]]
-            CompareFileLists("SHA", a_dir, "D", "X", tuple_d[L_idx_files], tuple_x[L_idx_files])
-        if 1 == (idx % 500):
-            print("%d of %d matching directories with files checked" % (idx, len(sorted_x_keys)))
-    
-    print("Done")
 
+    for gbl_idx, gbl_a_dir  in enumerate(sorted_x_keys):
+        if gbl_a_dir in Dir_x:
+            tuple_d = L_d[Dir_d[gbl_a_dir]]
+            tuple_x = L_x[Dir_x[gbl_a_dir]]
+            CompareFileLists(gbl_compare_type, gbl_a_dir, "D", "X", tuple_d[L_idx_files], tuple_x[L_idx_files])
+        if 1 == (gbl_idx % 500):
+            print("%d of %d matching directories with files checked" % (gbl_idx, len(sorted_x_keys)))
+
+    print("Done")
