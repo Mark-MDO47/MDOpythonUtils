@@ -270,6 +270,7 @@ python DirectoryWalk.py "%s" X > DirectoryCompareInfo.txt
     gbl_compare_type = "SHA256" # default
     if args.c_length_date:
         gbl_compare_type = "LENGTH_DATE"
+        sys.stderr.write("Warning - compare type c_length_date not implemented yet\n")
     elif args.c_ignore:
         gbl_compare_type = "IGNORE"
 
@@ -277,6 +278,9 @@ python DirectoryWalk.py "%s" X > DirectoryCompareInfo.txt
         print("Verbose print of DirectoryWalk starting conditions:")
         print("   dirname=\"%s\" other=\"%s\"" % (args.dirname, args.other[:1]))
         print("   file compare type = \"%s\"" % gbl_compare_type)
+        if "LENGTH_DATE" == gbl_compare_type:
+            print("   Warning - compare type c_length_date not implemented yet")
+
 
     print("\ngetting info about D: and X: directories")
     # Get info by traversing through D:
