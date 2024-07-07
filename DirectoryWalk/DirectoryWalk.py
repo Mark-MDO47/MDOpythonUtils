@@ -31,6 +31,8 @@ import sys
 import hashlib
 import argparse
 
+GBL_COMPARE_TYPE = "SHA256" # default
+
 TEST_D = r"D:\OlsonMedia\StuffAndInterests\BooksPapers\KindleMark"
 TEST_X = r"X:\OlsonMedia\StuffAndInterests\BooksPapers\KindleMark"
 DEFAULT_D = r"D:\OlsonMedia\StuffAndInterests"
@@ -169,7 +171,7 @@ def CompareFileLists_OneSided(do_compare, root, char_1, char_2, files_1, files_2
                 if ("UNKNOWN" != sha256_str1) and ("UNKNOWN" != sha256_str2):
                     # normal case - SHA256 worked
                     if sha256_str1 != sha256_str2:
-                        title_string = Print_With_Title(title_string, "  %s %s SHA not match %s" % (char_1, a_file_1, char_2))
+                        title_string = Print_With_Title(title_string, "  %s: %s SHA256 does not match %s:" % (char_1, a_file_1, char_2))
                 else:
                     # SHA256 error - maybe one of the drives got unmounted due to WiFi?
                     if "UNKNOWN" == sha256_str1:
@@ -177,7 +179,24 @@ def CompareFileLists_OneSided(do_compare, root, char_1, char_2, files_1, files_2
                     if "UNKNOWN" == sha256_str2:
                         title_string = Print_With_Title(title_string, "  SHA ERROR calculating SHA256 on %s %s" % (char_2, a_file_1))
             elif "LENGTH_DATE" == do_compare:
-                pass # FIXME TODO MDOMDO LENGTH/DATE compare
+                f_mtime1 = os.path.getmtime(char_1+root+"\\"+a_file_1)
+                f_mtime2 = os.path.getmtime(char_2+root+"\\"+a_file_1)
+                numbytes1 = os.path.getsize(char_1+root+"\\"+a_file_1)
+                numbytes2 = os.path.getsize(char_2+root+"\\"+a_file_1)
+                if (f_mtime1 != f_mtime2) or (numbytes1 != numbytes2):
+                    timing_1_comparedto_2 = "same"
+                    if f_mtime1 > f_mtime2:
+                        timing_1_comparedto_2 = "later"
+                    elif f_mtime1 < f_mtime2:
+                        timing_1_comparedto_2 = "earlier"
+                    sizing_1_comparedto_2 = "same"
+                    if numbytes1 > numbytes2:
+                        sizing_1_comparedto_2 = "larger"
+                    elif numbytes1 < numbytes2:
+                        sizing_1_comparedto_2 = "smaller"
+                    title_string = Print_With_Title(title_string, \
+                         " %s: %s datetime/length does not match %s: %s: datetime is %s and numbytes is %s as %s:" \
+                         % (char_1, a_file_1, char_2, char_1, timing_1_comparedto_2, sizing_1_comparedto_2, char_2))
             elif "IGNORE" == do_compare:
                 pass # Second call; don't do calculation two times
             else:
@@ -246,15 +265,15 @@ python DirectoryWalk.py "%s" X > DirectoryCompareInfo.txt
                            help='print verbose information about starting conditions)')
     me_group = my_parser.add_mutually_exclusive_group(required=False)
     me_group.add_argument('-ci',
-                           '--c_ignore',
+                           '--cmp_ignore',
                            action='store_true',
                            help='do not compare files found in both directories (just flag missing files)')
     me_group.add_argument('-cs',
-                           '--c_sha256',
+                           '--cmp_sha256',
                            action='store_true',
                            help='compare files found in both directories using SHA256; default is SHA256 comparison')
     me_group.add_argument('-cl',
-                           '--c_length_date',
+                           '--cmp_length_date',
                            action='store_true',
                            help='FUTURE-FEATURE compare files found in both directories using file-length and modify-date-time')
 
@@ -267,19 +286,16 @@ python DirectoryWalk.py "%s" X > DirectoryCompareInfo.txt
     drive_letter_x = args.other[:1]
     dirname_no_letter = args.dirname[1:]
 
-    gbl_compare_type = "SHA256" # default
-    if args.c_length_date:
-        gbl_compare_type = "LENGTH_DATE"
-        sys.stderr.write("Warning - compare type c_length_date not implemented yet\n")
-    elif args.c_ignore:
-        gbl_compare_type = "IGNORE"
+    GBL_COMPARE_TYPE = "SHA256" # default
+    if args.cmp_length_date:
+        GBL_COMPARE_TYPE = "LENGTH_DATE"
+    elif args.cmp_ignore:
+        GBL_COMPARE_TYPE = "IGNORE"
 
     if args.verbose:
         print("Verbose print of DirectoryWalk starting conditions:")
         print("   dirname=\"%s\" other=\"%s\"" % (args.dirname, args.other[:1]))
-        print("   file compare type = \"%s\"" % gbl_compare_type)
-        if "LENGTH_DATE" == gbl_compare_type:
-            print("   Warning - compare type c_length_date not implemented yet")
+        print("   file compare type = \"%s\"" % GBL_COMPARE_TYPE)
 
 
     print("\ngetting info about D: and X: directories")
@@ -311,7 +327,7 @@ python DirectoryWalk.py "%s" X > DirectoryCompareInfo.txt
         if gbl_a_dir in Dir_x:
             tuple_d = L_d[Dir_d[gbl_a_dir]]
             tuple_x = L_x[Dir_x[gbl_a_dir]]
-            CompareFileLists(gbl_compare_type, gbl_a_dir, "D", "X", tuple_d[L_idx_files], tuple_x[L_idx_files])
+            CompareFileLists(GBL_COMPARE_TYPE, gbl_a_dir, "D", "X", tuple_d[L_idx_files], tuple_x[L_idx_files])
         if 1 == (gbl_idx % 500):
             print("%d of %d matching directories with files checked" % (gbl_idx, len(sorted_x_keys)))
 
