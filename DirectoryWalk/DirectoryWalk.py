@@ -262,7 +262,7 @@ python DirectoryWalk.py "%s" X > DirectoryCompareInfo.txt
     my_parser.add_argument('-v',
                            '--verbose',
                            action='store_true',
-                           help='print verbose information about starting conditions)')
+                           help='print verbose information about starting conditions')
     me_group = my_parser.add_mutually_exclusive_group(required=False)
     me_group.add_argument('-ci',
                            '--cmp_ignore',
@@ -275,7 +275,7 @@ python DirectoryWalk.py "%s" X > DirectoryCompareInfo.txt
     me_group.add_argument('-cl',
                            '--cmp_length_date',
                            action='store_true',
-                           help='FUTURE-FEATURE compare files found in both directories using file-length and modify-date-time')
+                           help='compare files found in both directories using file-length and modify-date-time')
 
     args = my_parser.parse_args()
 
