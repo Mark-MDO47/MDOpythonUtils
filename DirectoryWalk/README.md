@@ -26,7 +26,7 @@ python DirectoryWalk.py "D:\path-to-my\StuffAndInterests" X > DirectoryCompareIn
 ```
 
 ## Why Not Use an Existing Sync Tool
-I don't want the files changed "automatically". For instance, sometimes the earlier version of the file is the one I want to save, or contains some parts that I want to merge.
+I don't want the files changed "automatically". For instance, sometimes the earlier version of the file is the one I want to save, or contains some parts that I want to merge into the later file.
 
 ## Regarding Comparison Options
 I expect that I will usually use --cmp_length_date. This is noticeably faster (especially on large files) than --cmp_sha256; however, it can give a false sense of security:
