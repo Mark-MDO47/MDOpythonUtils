@@ -37,3 +37,4 @@ For this reason I will still occasionally use --cmp_sha256 to make sure the file
 
 Usage of --cmp_ignore is the fastest case - it will tell you if there are files/directories on one drive not found on the other.
 
+**NOTE** - the --cmp_* options are for FILE comparison. The directories themselves are not checked directly; they are only checked for the information they return.
