@@ -72,3 +72,8 @@
   - stdout receives bash shell script to set filedates and filename
 - tools to convert heic to jpeg
 - gotchas: has not been extensively tested
+
+## DirectoryWalk - Traverse 2 Directory Trees and Describe Differences
+- For usage text: `python DirectoryWalk.py -h`
+- Example: `python DirectoryWalk.py "D:\path-to-my\StuffAndInterests" X > DirectoryCompareInfo.txt`
+- File compare options: --cmp_ignore, --cmp_length_date, --cmp_sha256
