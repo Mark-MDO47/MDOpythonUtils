@@ -9,6 +9,7 @@
 * [mdoAnsibleLint - start of a simple lint for Ansible YAML files](#mdoansiblelint-\--start-of-a-simple-lint-for-ansible-yaml-files "mdoAnsibleLint - start of a simple lint for Ansible YAML files")
 * [ReadAmazonKindleList - Read Amazon Kindle list copied from website and make a spreadsheet](#readamazonkindlelist-\--read-amazon-kindle-list-copied-from-website-and-make-a-spreadsheet "ReadAmazonKindleList - Read Amazon Kindle list copied from website and make a spreadsheet")
 * [ProcessPhotos - sort Google Photos downloads by date/time](#processphotos-\--sort-google-photos-downloads-by-datetime "ProcessPhotos - sort Google Photos downloads by date/time")
+* [DirectoryWalk - Traverse 2 Directory Trees and Describe Differences](#directorywalk-\--traverse-2-directory-trees-and-describe-differences "DirectoryWalk - Traverse 2 Directory Trees and Describe Differences")
 
 ## create_md_TOC - read GitHub-style MarkDown and insert Table of Contents
 - example: python create_md_TOC.py README.md
