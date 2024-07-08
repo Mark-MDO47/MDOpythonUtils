@@ -36,3 +36,7 @@ I have seen it list book 10 of a series two times and not list book 8.
 And sometimes they will change the Author name: they changed "Adrian Goldsworthy" to "Adrian Keith Goldsworthy"
 - There is some text output that might help alert you to this
 - flags --oldapproxmatch and --newapproxmatch are one way to help deal with it
+
+The sort order I use for this spreadsheet is as follows:
+- sort by Author, Series, Num, Title
+- sort anything that looks like a number as a number
