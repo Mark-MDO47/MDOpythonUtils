@@ -20,9 +20,9 @@ python CDRipRename.py "D:\path-to-my\SoundForgeTextFile.txt" > rename_cmds.sh
 NOTE: directory containing SoundForgeTextFile also contains RIP files
     example: CD_01.wav, CD_01.mp3, CD_02.wav, etc.
     this might generate
-        mv CD_01.wav CD_001_F_Chopin_Ballade_in_F_major_Op38_Bruce_Xiaoyu_Liu.wav
-        mv CD_02.mp3 CD_002_F_Chopin_Rondo_a_la_Mazur_in_F_major_Op5_Bruce_Xiaoyu_Liu.mp3
-        mv CD_02.wav CD_002_F_Chopin_Rondo_a_la_Mazur_in_F_major_Op5_Bruce_Xiaoyu_Liu.wav
+        mv CD_01.wav CD_01_F_Chopin_Ballade_in_F_major_Op38_Bruce_Xiaoyu_Liu.wav
+        mv CD_02.mp3 CD_02_F_Chopin_Rondo_a_la_Mazur_in_F_major_Op5_Bruce_Xiaoyu_Liu.mp3
+        mv CD_02.wav CD_02_F_Chopin_Rondo_a_la_Mazur_in_F_major_Op5_Bruce_Xiaoyu_Liu.wav
 
     Of course you can use sed or other means to re-arrange and/or shorten the strings:
 python CDRipRename.py -s CD -nd 3 SoundForgeTextFile.txt | sed "s?F_Chopin?Chopin?"
@@ -41,8 +41,13 @@ FILE_EXTS = [".wav", ".mp3"]
 
 ###################################################################################
 # print_rename - print rename commands
-def print_rename(a_num_str, starts_with, trac_name, artist_name, filenames, fout):
+def print_rename(a_num_str, starts_with, use_leading_tracnum, trac_name, artist_name, filenames, fout):
     trac_name_win_fname = trac_name.replace(" ","_").replace(".","").replace("(","").replace(")","").replace("'","").replace("[","").replace("]","").replace(",","")
+    if (not use_leading_tracnum) and trac_name_win_fname[0].isdigit():
+        while trac_name_win_fname[0].isdigit():
+            trac_name_win_fname = trac_name_win_fname[1:]
+        while "_" == trac_name_win_fname[0]:
+            trac_name_win_fname = trac_name_win_fname[1:]
     artist_name_win_fname = artist_name.replace(" ","_").replace(".","").replace("(","").replace(")","").replace("'","").replace("[","").replace("]","").replace(",","")
     for a_fn in filenames:
         if (0 != len(starts_with)) and (0 != a_fn.find(starts_with)):
@@ -65,7 +70,7 @@ def print_rename(a_num_str, starts_with, trac_name, artist_name, filenames, fout
             continue
         if a_fn_num == int(a_num_str,10):
             # fout.write("mv %s %s_%s_%s%s\n" % (a_fn, a_fn[:tmp_underscore],a_num_str,trac_name_win_fname,a_fn_ext))
-            fout.write("mv %s %s_%s_%s_%s%s\n" % (a_fn, a_fn[:tmp_underscore],a_num_str,trac_name_win_fname,artist_name_win_fname,a_fn_ext))
+            fout.write("mv %s %s_%s_%s%s%s\n" % (a_fn, a_fn[:tmp_underscore],a_num_str,trac_name_win_fname,artist_name_win_fname,a_fn_ext))
     # end print_rename()
 
 ###################################################################################
@@ -83,7 +88,7 @@ def process_column_line(col_names, a_line, line_num, fname, fout, ferr):
 
 ###################################################################################
 # do_CDRipRename - process the text file
-def do_CDRipRename(fname, numdigits, starts_with, fout, ferr):
+def do_CDRipRename(fname, numdigits, starts_with, use_leading_tracnum, fout, ferr):
 
     # this will give error message if file not present
     finp = open(fname,'rt')
@@ -106,8 +111,10 @@ def do_CDRipRename(fname, numdigits, starts_with, fout, ferr):
         if found_title_line and a_line[0].isdigit():
             a_num = int(a_split[COLUMN_NUMS["title"]])
             trac_name = a_split[COLUMN_NUMS["name"]].strip()
-            artist_name = a_split[COLUMN_NUMS["artist"]].strip()
-            print_rename(fmt_str % a_num, starts_with, trac_name, artist_name, filenames, fout)
+            artist_name = ""
+            if len(a_split) > COLUMN_NUMS["artist"]:
+                artist_name = "_" + a_split[COLUMN_NUMS["artist"]].strip()
+            print_rename(fmt_str % a_num, starts_with,use_leading_tracnum, trac_name, artist_name, filenames, fout)
         elif a_split[0] == COLUMNS_USED["title"]:
             col_names = []
             for tmp_col in a_split: # remove entries for extra tabs
@@ -141,9 +148,9 @@ python CDRipRename.py "%s" > rename_cmds.sh
 NOTE: directory containing SoundForgeTextFile also contains RIP files
     example: CD_01.wav, CD_01.mp3, CD_02.wav, etc.
     this might generate
-        mv CD_01.wav CD_001_F_Chopin_Ballade_in_F_major_Op38_Bruce_Xiaoyu_Liu.wav
-        mv CD_02.mp3 CD_002_F_Chopin_Rondo_a_la_Mazur_in_F_major_Op5_Bruce_Xiaoyu_Liu.mp3
-        mv CD_02.wav CD_002_F_Chopin_Rondo_a_la_Mazur_in_F_major_Op5_Bruce_Xiaoyu_Liu.wav
+        mv CD_01.wav CD_01_F_Chopin_Ballade_in_F_major_Op38_Bruce_Xiaoyu_Liu.wav
+        mv CD_02.mp3 CD_02_F_Chopin_Rondo_a_la_Mazur_in_F_major_Op5_Bruce_Xiaoyu_Liu.mp3
+        mv CD_02.wav CD_02_F_Chopin_Rondo_a_la_Mazur_in_F_major_Op5_Bruce_Xiaoyu_Liu.wav
 
     Of course you can use sed or other means to re-arrange and/or shorten the strings:
 python CDRipRename.py -s CD -nd 3 SoundForgeTextFile.txt | sed \"s?F_Chopin?Chopin?\"
@@ -154,9 +161,11 @@ python CDRipRename.py -s CD -nd 3 SoundForgeTextFile.txt | sed \"s?F_Chopin?Chop
                            help='optional num digits for output filename; default 2')
     my_parser.add_argument('-s', '--startwith', type=str, default="",
                            help='optional string required at start of input file name')
+    my_parser.add_argument('-u', '--use_leading_tracnum', action='store_true',
+                           help='don\'t remove duplicate leading trac num')
     # my_parser.add_argument('-v', '--verbose', action='store_true',
     #                        help='print verbose information about starting conditions')
 
     args = my_parser.parse_args()
 
-    do_CDRipRename(args.textfile,args.numdigits,args.startwith,sys.stdout,sys.stderr)
+    do_CDRipRename(args.textfile,args.numdigits,args.startwith,args.use_leading_tracnum,sys.stdout,sys.stderr)
