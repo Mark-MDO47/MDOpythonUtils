@@ -10,6 +10,7 @@
 * [ReadAmazonKindleList - Read Amazon Kindle list copied from website and make a spreadsheet](#readamazonkindlelist-\--read-amazon-kindle-list-copied-from-website-and-make-a-spreadsheet "ReadAmazonKindleList - Read Amazon Kindle list copied from website and make a spreadsheet")
 * [ProcessPhotos - sort Google Photos downloads by date/time](#processphotos-\--sort-google-photos-downloads-by-datetime "ProcessPhotos - sort Google Photos downloads by date/time")
 * [DirectoryWalk - Traverse 2 Directory Trees and Describe Differences](#directorywalk-\--traverse-2-directory-trees-and-describe-differences "DirectoryWalk - Traverse 2 Directory Trees and Describe Differences")
+* [CDRipRename - renames CD RIP fnames to longer names based on trackname file](#CDRipRename-\--renames-CD-RIP-fnames-to-longer-names-based-on-trackname "DirectoryWalk - Traverse 2 Directory Trees and Describe Differences")
 
 ## create_md_TOC - read GitHub-style MarkDown and insert Table of Contents
 - example: python create_md_TOC.py README.md
@@ -78,3 +79,8 @@
 - For usage text: `python DirectoryWalk.py -h`
 - Example: `python DirectoryWalk.py "D:\path-to-my\StuffAndInterests" X > DirectoryCompareInfo.txt`
 - File compare options: --cmp_ignore, --cmp_length_date, --cmp_sha256
+
+## CDRipRename - renames CD RIP fnames to longer names based on trackname file
+- For usage text: `python CDRipRename.py -h`
+- Example: python CDRipRename.py -s CD -nd 3 SoundForgeTextFile.txt | sed "s?F_Chopin?Chopin?"
+- Options: --numdigits NUMDIGITS, --startwith STARTWITH, --use_leading_tracnum
