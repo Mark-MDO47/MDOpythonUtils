@@ -82,5 +82,5 @@
 
 ## CDRipRename - renames CD RIP fnames to longer names based on trackname file
 - For usage text: `python CDRipRename.py -h`
-- Example: python CDRipRename.py -s CD -nd 3 SoundForgeTextFile.txt | sed "s?F_Chopin?Chopin?"
+- Example: `python CDRipRename.py -s CD -nd 3 SoundForgeTextFile.txt | sed "s?F_Chopin?Chopin?"`
 - Options: --numdigits NUMDIGITS, --startwith STARTWITH, --use_leading_tracnum
