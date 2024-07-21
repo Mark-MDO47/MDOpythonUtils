@@ -108,7 +108,7 @@ def do_CDRipRename(fname, numdigits, starts_with, use_leading_tracnum, fout, fer
         line_num += 1
         a_line = a_line.strip()
         a_split = a_line.split("\t")
-        if found_title_line and a_line[0].isdigit():
+        if len(a_line) and found_title_line and a_line[0].isdigit():
             a_num = int(a_split[COLUMN_NUMS["title"]])
             trac_name = a_split[COLUMN_NUMS["name"]].strip()
             artist_name = ""
