@@ -1,5 +1,6 @@
 # CDRipRename.py 
- 
+
+```
 usage: CDRipRename dirname other
 
 renames CD RIP fnames to longer names based on trackname file
@@ -28,3 +29,5 @@ NOTE: directory containing SoundForgeTextFile also contains RIP files
 
     Of course you can use sed or other means to re-arrange and/or shorten the strings:
 python CDRipRename.py -s CD -nd 3 SoundForgeTextFile.txt | sed "s?F_Chopin?Chopin?"
+
+```
