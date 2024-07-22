@@ -40,15 +40,66 @@ COLUMN_NUMS =  {"title": -1, "name": -1, "artist": -1}
 FILE_EXTS = [".wav", ".mp3"]
 
 ###################################################################################
+# make_win_fname
+#
+# Turn " " to "_"
+#
+# Personal preference: causes problems with bash and/or cmd
+#
+# & (ampersand)
+# ; (semi-colon)
+#
+# The forbidden printable ASCII characters for filenames are:
+#
+# Linux/Unix:
+# / (forward slash)
+#
+# Windows:
+# < (less than)
+# > (greater than)
+# : (colon - sometimes works, but is actually NTFS Alternate Data Streams)
+# " (double quote)
+# / (forward slash)
+# \ (backslash)
+# | (vertical bar or pipe)
+# ? (question mark)
+# * (asterisk)
+#
+# Non-printable characters
+# NOTE: even if legal, these would be a problem to deal with
+# If your data comes from a source that would permit non-printable characters then there is more to check for.
+#
+# Linux/Unix:
+# 0 (NULL byte)
+#
+# Windows:
+# 0-31 (ASCII control characters)
+def make_win_fname(fname):
+    REMOVE_CHARS = r'<>:"/\|?*&;' # bad filename characters
+    win_fname = fname.replace(" ","_") # change blanks to underscore
+    for idx in range(len(win_fname)):
+        if idx >= len(win_fname):
+            break # string may get shorter
+        if (win_fname[idx] < " ") or (win_fname[idx] in REMOVE_CHARS):
+            win_fname = win_fname[:idx]+win_fname[1+idx:]
+    if len(win_fname):
+       if "." == win_fname[-1]:
+           win_fname = win_fname[:-1]
+    if 0 == len(win_fname):
+        win_fname = "NULL"
+    return win_fname
+    # end make_win_fname()
+
+###################################################################################
 # print_rename - print rename commands
 def print_rename(a_num_str, starts_with, use_leading_tracnum, trac_name, artist_name, filenames, fout):
-    trac_name_win_fname = trac_name.replace(" ","_").replace(".","").replace("(","").replace(")","").replace("'","").replace("[","").replace("]","").replace(",","")
+    trac_name_win_fname = make_win_fname(trac_name)
     if (not use_leading_tracnum) and trac_name_win_fname[0].isdigit():
         while trac_name_win_fname[0].isdigit():
             trac_name_win_fname = trac_name_win_fname[1:]
         while "_" == trac_name_win_fname[0]:
             trac_name_win_fname = trac_name_win_fname[1:]
-    artist_name_win_fname = artist_name.replace(" ","_").replace(".","").replace("(","").replace(")","").replace("'","").replace("[","").replace("]","").replace(",","")
+    artist_name_win_fname = make_win_fname(artist_name)
     for a_fn in filenames:
         if (0 != len(starts_with)) and (0 != a_fn.find(starts_with)):
             continue
