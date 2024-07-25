@@ -48,6 +48,7 @@ FILE_EXTS = [".wav", ".mp3"]
 #
 # & (ampersand)
 # ; (semi-colon)
+# ' (single-quote)
 #
 # The forbidden printable ASCII characters for filenames are:
 #
@@ -75,7 +76,7 @@ FILE_EXTS = [".wav", ".mp3"]
 # Windows:
 # 0-31 (ASCII control characters)
 def make_win_fname(fname):
-    REMOVE_CHARS = r'<>:"/\|?*&;' # bad filename characters
+    REMOVE_CHARS = r'<>:"/\|?*&;\'' # bad filename characters
     win_fname = fname.replace(" ","_") # change blanks to underscore
     for idx in range(len(win_fname)):
         if idx >= len(win_fname):
