@@ -28,7 +28,11 @@ def xlsx2txt(xlsName):
             sys.stdout.write("%s\t" % sheet)
             for col in range(len(row)):
                 if pd.notna(row[col]):
-                   sys.stdout.write("%s\t" % row[col])
+                    try:
+                        sys.stdout.write("%s\t" % row[col])
+                    except:
+                        sys.stderr.write("Error - bad char in file:|%s| tab:|%s| row:%d col:%d\n" % (xlsName, sheet, row_num, col))
+                        sys.stdout.write("BAD_CHARS\t")
                 else:
                     sys.stdout.write("\t")
             sys.stdout.write("\n")
