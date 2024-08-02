@@ -31,7 +31,7 @@ def xlsx2txt(xlsName):
                     try:
                         sys.stdout.write("%s\t" % row[col])
                     except:
-                        sys.stderr.write("Error - bad char in file:|%s| tab:|%s| row:%d col:%d\n" % (xlsName, sheet, row_num, col))
+                        sys.stderr.write("Error - BAD_CHARS in file:|%s| tab:|%s| row:%d col:%d\n" % (xlsName, sheet, row_num, col))
                         sys.stdout.write("BAD_CHARS\t")
                 else:
                     sys.stdout.write("\t")
