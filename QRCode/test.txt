@@ -1,0 +1,5 @@
+XIAO_test_msg.png	Test Message to XIAO ESP32-Sense	74:4d:bd:11:11:11|TestMessage
+fred.jpg	this is an error	x y z
+../fred.png	another error	abc
+abc\fred.png	yet another error	klm
+only_two.png	error only two fields
