@@ -69,7 +69,7 @@ def do_QRcode(fname, debug_output, split_text):
 if __name__ == "__main__":
     my_parser = argparse.ArgumentParser(prog='QRcode',
         formatter_class=argparse.RawTextHelpFormatter,
-        description="reads the named instructions.txt file (tab-separated variable) and generates *.png QRcodes",
+        description="Reads the named instructions.txt file (tab-separated variable)\n  and generates *.png QRcodes and *.html",
         epilog="""NOTE: instructions.txt is filename.png<TAB>comment<TAB>text-for-QR-code
 Example:
 python QRcode.py instructions.txt
