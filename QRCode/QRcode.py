@@ -6,15 +6,16 @@
 
 import qrcode
 import sys
-import os
+# import os
 import argparse
 
 
 ###################################################################################
 # do_QRcode() - read instructions from fname; make QR code files
+#
 def do_QRcode(fname, debug_output, split_text):
     fmt = '<img src="%s" width="400" alt="%s" style="max-width: 100%s;"><br><br>\n\n\n'
-    my_cwd = os.getcwd()
+    # my_cwd = os.getcwd()
 
     # my old-style text reading
     fobj = open(fname, 'rt')
@@ -31,7 +32,7 @@ def do_QRcode(fname, debug_output, split_text):
             a_split.append(t.strip())
 
         # validity check the line
-        if (3 > len(a_split)):
+        if 3 > len(a_split):
             sys.stderr.write("  $$$ ERROR $$$: instruction must have 3 tab-separated fields, not %d<br><br>\n\n" % len(a_split))
             line_good = False
         elif 4 != (len(a_split[0]) - a_split[0].find(".png")):
