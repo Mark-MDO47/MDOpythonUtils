@@ -3,6 +3,45 @@
 # QRcode.py - reads named file "instructions.txt"
 #   generates QR codes
 #
+# When used to generate QR codes for the UniRemoteCYD program, it should
+#     make an output as described below:
+# https://github.com/Mark-MDO47/UniRemote/
+#
+########################### INPUT ###########################
+# The input QR code file should be a tab-separated-variable text file
+#     of the following form:
+# <*.png filename><TAB><<DESCRIPTION STRING><TAB><MAC ADDRESS><"|"><COMMAND STRING>
+#
+# Most of those are described in the output section. The ones for input only are here.
+#
+# <*.png filename> is a string giving a unique filename for the generated QR-code.
+#     The *.png will be created containing a QR code in the output format below.
+#     There will also be a *.html file to display the QR code in a browser
+#      example: bad_test_lg_msg.png
+#
+# <"|"> is the single character of a vertical bar (the bash pipe character).
+#
+#
+########################### OUTPUT ###########################
+# The output QR code or MIFARE Classic EV1 1K card should be a
+#     tab-separated-variable text file of the following form:
+# <MAC ADDRESS><TAB><COMMAND STRING><TAB><DESCRIPTION STRING>
+# 
+# <MAC ADDRESS> is a string of the following exact form:
+#     ##:##:##:##:##:##
+#   This is the MAC Address that will be used to send the ESP-NOW message;
+#     the MAC address of the target system.
+#   Note that this is a six-part MAC address in hexadecimal. Each hex number
+#   is exactly two digits long. If you need to start it with a zero, do so.
+#   Because I am a lazy coder, formatting the string properly is up to you.
+# 
+# <COMMAND STRING> is a short (maximum 249 characters + zero termination) command
+#   The receiving MAC address will receive it as a zero-terminated string (including
+#   the zero terminator).
+#
+# <DESCRIPTION STRING> can be zero length or more, but for consistency
+#   the <TAB> prior to the description string is required.
+#   The description is just for your purposes; it is not sent to the ESP-NOW target.
 
 import qrcode
 import sys
