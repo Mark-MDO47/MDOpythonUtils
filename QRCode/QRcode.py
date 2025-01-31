@@ -10,9 +10,10 @@
 ########################### INPUT ###########################
 # The input QR code file should be a tab-separated-variable text file
 #     of the following form:
-# <*.png filename><TAB><<DESCRIPTION STRING><TAB><MAC ADDRESS><"|"><COMMAND STRING>
+# <*.png filename><TAB><DESCRIPTION STRING><TAB><MAC ADDRESS><"|"><COMMAND STRING>
 #
-# Most of those are described in the output section. The ones for input only are here.
+# Most of those fields are described in the output section.
+# The ones for input only are here.
 #
 # <*.png filename> is a string giving a unique filename for the generated QR-code.
 #     The *.png will be created containing a QR code in the output format below.
