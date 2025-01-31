@@ -59,10 +59,15 @@ def do_create_md_TOC(fname):
     toc_lines = []  # our new TOC lines
     line_end = ""   # will use line end we find in file
     toc_string = "**Table Of Contents**"
+    lines_in = 0
 
     toc_lines.append(toc_string)
     sys.stdout.write(toc_lines[0]+"\n")
-    fobj = open(fname, 'r')
+    fobj = open(fname, 'rt')
+    if G_DEBUG:
+        lines_in += 1
+        sys.stderr.write("Reading Line %d\n" % lines_in)
+        sys.stderr.flush()
     a_line = fobj.readline()
     while 0 != len(a_line):
         save_lines.append(a_line)
@@ -95,6 +100,10 @@ def do_create_md_TOC(fname):
                 a_unmod = "Top"
             toc_lines.append("%s* [%s](#%s \"%s\")" % (pre_line, a_unmod, a_line, a_unmod))
             sys.stdout.write(toc_lines[-1] +"\n")
+        if G_DEBUG:
+            lines_in += 1
+            sys.stderr.write("Reading Line %d\n" % lines_in)
+            sys.stderr.flush()
         a_line = fobj.readline()
     fobj.close()
 
@@ -124,6 +133,7 @@ def do_create_md_TOC(fname):
 # python create_md_TOC.py -h to see what the arguments are
 #
 if __name__ == "__main__":
+    global G_DEBUG
     my_parser = argparse.ArgumentParser(prog='create_md_TOC',
         formatter_class=argparse.RawTextHelpFormatter,
         description="reads a MarkDown (*.md) file and re-writes file and writes TOC lines to stdout a table of contents",
@@ -132,6 +142,8 @@ python create_md_TOC.py README.md > TOC_suggestions.txt
 """,
         usage='%(prog)s fname')
     my_parser.add_argument('fname',type=str,help='path to MarkDown text file')
+    my_parser.add_argument('-d', '--debug_output', action='store_true', help='enable debug output')
     args = my_parser.parse_args()
+    G_DEBUG = args.debug_output
 
     do_create_md_TOC(args.fname)
