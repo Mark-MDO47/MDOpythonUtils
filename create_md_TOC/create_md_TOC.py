@@ -59,7 +59,6 @@ def do_create_md_TOC(fname):
     toc_lines = []  # our new TOC lines
     line_end = ""   # will use line end we find in file
     toc_string = "**Table Of Contents**"
-    lines_in = 0
 
     toc_lines.append(toc_string)
     sys.stdout.write(toc_lines[0]+"\n")
@@ -108,7 +107,7 @@ def do_create_md_TOC(fname):
     fobj.close()
 
     if 0 != len(line_end): # if we found the TOC in the file
-        fobj = open(fname, 'w')
+        fobj = open(fname, 'wt')
         for i in range(found_toc):
             fobj.write("%s" % save_lines[i])
         for i in range(found_toc, len(save_lines)):
