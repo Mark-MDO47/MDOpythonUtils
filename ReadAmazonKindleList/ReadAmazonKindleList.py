@@ -176,7 +176,7 @@ def doProcessTitle(theLine):
             seriesNum = totMatch[2]
             foundSeries = True
             break
-    if (False == foundSeries):
+    if False == foundSeries:
         for partMatch in TITLE_partialMatch:
             if -1 != title_lower.find(partMatch[0]):
                 series = partMatch[1]
