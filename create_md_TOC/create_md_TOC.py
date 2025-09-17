@@ -60,11 +60,12 @@ def do_create_md_TOC(fname):
     line_end = ""   # will use line end we find in file
     toc_string = "**Table Of Contents**"
 
+
     toc_lines.append(toc_string)
     sys.stdout.write(toc_lines[0]+"\n")
     fobj = open(fname, 'rt')
     if G_DEBUG:
-        lines_in += 1
+        lines_in = 1
         sys.stderr.write("Reading Line %d\n" % lines_in)
         sys.stderr.flush()
     a_line = fobj.readline()
