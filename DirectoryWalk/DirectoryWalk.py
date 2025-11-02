@@ -324,7 +324,7 @@ python DirectoryWalk.py "%s" X > DirectoryCompareInfo.txt
     sorted_x_keys = sorted(Dir_x.keys())
 
     for gbl_idx, gbl_a_dir  in enumerate(sorted_x_keys):
-        if gbl_a_dir in Dir_x:
+        if gbl_a_dir in Dir_d:
             tuple_d = L_d[Dir_d[gbl_a_dir]]
             tuple_x = L_x[Dir_x[gbl_a_dir]]
             CompareFileLists(GBL_COMPARE_TYPE, gbl_a_dir, "D", "X", tuple_d[L_idx_files], tuple_x[L_idx_files])
